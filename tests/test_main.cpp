@@ -2,6 +2,7 @@
 
 void test_color_parsing();
 void test_config_parsing();
+void test_config_file_loading();
 void test_buffer_operations();
 
 int main() {
@@ -11,6 +12,7 @@ int main() {
 
     test_color_parsing();
     test_config_parsing();
+    test_config_file_loading();
     test_buffer_operations();
 
     std::cout << "========================================\n";
