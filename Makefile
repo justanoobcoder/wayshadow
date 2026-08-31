@@ -33,6 +33,10 @@ TARGET = keypop
 
 WAYLAND_PROTOCOLS_DIR ?= /usr/share/wayland-protocols
 
+PREFIX  ?= /usr/local
+BINDIR  ?= $(PREFIX)/bin
+MANDIR  ?= $(PREFIX)/share/man
+
 all: $(TARGET)
 
 $(TARGET): $(OBJS) src/main.o
@@ -76,13 +80,13 @@ clean:
 	rm -f include/keypop/version.hpp
 
 install: $(TARGET)
-	install -D -m 755 $(TARGET) /usr/local/bin/$(TARGET)
-	install -D -m 644 man/keypop.1 /usr/local/share/man/man1/keypop.1
-	install -D -m 644 man/keypop.conf.5 /usr/local/share/man/man5/keypop.conf.5
+	install -D -m 755 $(TARGET)         $(DESTDIR)$(BINDIR)/$(TARGET)
+	install -D -m 644 man/keypop.1      $(DESTDIR)$(MANDIR)/man1/keypop.1
+	install -D -m 644 man/keypop.conf.5 $(DESTDIR)$(MANDIR)/man5/keypop.conf.5
 
 uninstall:
-	rm -f /usr/local/bin/$(TARGET)
-	rm -f /usr/local/share/man/man1/keypop.1
-	rm -f /usr/local/share/man/man5/keypop.conf.5
+	rm -f $(DESTDIR)$(BINDIR)/$(TARGET)
+	rm -f $(DESTDIR)$(MANDIR)/man1/keypop.1
+	rm -f $(DESTDIR)$(MANDIR)/man5/keypop.conf.5
 
 .PHONY: all clean install uninstall test
