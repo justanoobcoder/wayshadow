@@ -33,7 +33,7 @@ TARGET = keypop
 
 WAYLAND_PROTOCOLS_DIR ?= /usr/share/wayland-protocols
 
-PREFIX  ?= /usr/local
+PREFIX  ?= /usr
 BINDIR  ?= $(PREFIX)/bin
 MANDIR  ?= $(PREFIX)/share/man
 
