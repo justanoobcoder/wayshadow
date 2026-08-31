@@ -1,0 +1,47 @@
+.TH KEYPOP 1 "August 2026" "keypop 0.1.0" "User Commands"
+.SH NAME
+keypop \- elegant keystroke and mouse click visualizer for Wayland
+.SH SYNOPSIS
+.B keypop
+[\fB\-b\fR \fIcolor\fR]
+[\fB\-c\fR \fIcolor\fR]
+[\fB\-s\fR \fIsize\fR]
+[\fB\-g\fR \fIgeometry\fR]
+[\fB\-o\fR \fIopacity\fR]
+[\fB\-t\fR \fItimeout\fR]
+[\fB\-v\fR]
+[\fB\-h\fR]
+.SH DESCRIPTION
+.B keypop
+is a lightweight, high-performance on-screen keystroke and mouse click visualization overlay written in C++20 for Wayland compositors. It captures input events via libinput and displays typed combinations, modifier keys, repeat counters, and mouse clicks in real time.
+.SH OPTIONS
+.TP
+.BI \-b " color"
+Set background color as hexadecimal string (e.g. \fI#000000\fR or \fI000000\fR).
+.TP
+.BI \-c " color"
+Set text foreground color as hexadecimal string (e.g. \fI#FFFFFF\fR).
+.TP
+.BI \-s " size"
+Set font size in points (default: \fI65\fR).
+.TP
+.BI \-g " WxH"
+Set window dimensions in pixels (default: \fI840x130\fR).
+.TP
+.BI \-o " opacity"
+Set background opacity between 0.0 (transparent) and 1.0 (opaque) (default: \fI0.6\fR).
+.TP
+.BI \-t " ms"
+Set auto-hide timeout in milliseconds. If set to \fI0\fR, the overlay will never hide automatically (default: \fI2000\fR).
+.TP
+.B \-v
+Show version information and build metadata.
+.TP
+.B \-h
+Show help usage summary.
+.SH FILES
+.TP
+.I ~/.config/keypop/keypop.conf
+User configuration file.
+.SH SEE ALSO
+.BR keypop.conf (5)

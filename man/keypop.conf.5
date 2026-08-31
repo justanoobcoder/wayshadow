@@ -1,0 +1,48 @@
+.TH KEYPOP.CONF 5 "August 2026" "keypop 0.1.0" "File Formats Manual"
+.SH NAME
+keypop.conf \- configuration file for the keypop visualizer
+.SH DESCRIPTION
+The
+.B keypop.conf
+file contains user customization settings for the
+.BR keypop (1)
+visualizer.
+.SH LOCATION
+The file is searched for in:
+.IP
+.I ~/.config/keypop/keypop.conf
+.PP
+or under \fI$XDG_CONFIG_HOME/keypop/keypop.conf\fR.
+.SH FORMAT
+The configuration file is formatted in INI syntax under the \fB[settings]\fR section.
+.SH OPTIONS
+.TP
+.B background
+Background color in hex format (e.g. \fI#000000\fR).
+.TP
+.B foreground
+Text color in hex format (e.g. \fI#FFFFFF\fR).
+.TP
+.B opacity
+Background opacity as a floating point value from \fI0.0\fR to \fI1.0\fR (default: \fI0.6\fR).
+.TP
+.B font_size
+Font size in points (default: \fI65\fR).
+.TP
+.B geometry
+Window dimensions in \fIWIDTHxHEIGHT\fR format (default: \fI840x130\fR).
+.TP
+.B hide_timeout
+Inactivity timeout in milliseconds before hiding the overlay window (default: \fI2000\fR).
+.SH EXAMPLES
+.nf
+[settings]
+background = #1e1e2e
+foreground = #cdd6f4
+opacity = 0.8
+font_size = 70
+geometry = 900x140
+hide_timeout = 2500
+.fi
+.SH SEE ALSO
+.BR keypop (1)
