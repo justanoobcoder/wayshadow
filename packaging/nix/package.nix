@@ -18,7 +18,7 @@ stdenv.mkDerivation {
   pname = "keypop";
   version = "0.1.0";
 
-  src = ./.;
+  src = ../..;
 
   nativeBuildInputs = [
     pkg-config
