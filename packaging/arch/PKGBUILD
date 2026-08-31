@@ -24,6 +24,7 @@ makedepends=(
 )
 source=("$pkgname-$pkgver.tar.gz")
 sha256sums=('SKIP')
+options=(!debug)
 
 build() {
     cd "$pkgname-$pkgver"
