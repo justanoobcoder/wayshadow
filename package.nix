@@ -1,17 +1,17 @@
 {
   lib,
   stdenv,
+  cairo,
+  glib,
+  gtk3,
+  libappindicator-gtk3,
+  libinput,
+  libxkbcommon,
+  pango,
   pkg-config,
   wayland,
   wayland-protocols,
   wayland-scanner,
-  cairo,
-  pango,
-  libinput,
-  libxkbcommon,
-  gtk3,
-  libappindicator-gtk3,
-  glib,
 }:
 
 stdenv.mkDerivation {
@@ -26,15 +26,15 @@ stdenv.mkDerivation {
   ];
 
   buildInputs = [
-    wayland
-    wayland-protocols
     cairo
-    pango
-    libinput
-    libxkbcommon
+    glib
     gtk3
     libappindicator-gtk3
-    glib
+    libinput
+    libxkbcommon
+    pango
+    wayland
+    wayland-protocols
   ];
 
   makeFlags = [
