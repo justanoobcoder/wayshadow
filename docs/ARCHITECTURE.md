@@ -1,10 +1,10 @@
-# Architecture of keypop (C++ Port)
+# Architecture of keypop
 
-This document describes the architectural design, component interactions, and data flow of **keypop** (C++20 port).
+This document describes the architectural design, component interactions, and data flow of **keypop**.
 
 ## 1. High-Level Overview
 
-`keypop` is a minimalist, elegant keystroke and mouse click visualization overlay designed for Wayland compositors. It intercepts input events system-wide using `libinput` via `udev` and renders smooth, configurable visual indicators onto a Wayland ARGB surface with `cairo` and `pango`.
+`keypop` is a minimalist, elegant keystroke visualization overlay designed for Wayland compositors. It intercepts input events system-wide using `libinput` via `udev` and renders smooth, configurable visual indicators onto a Wayland ARGB surface with `cairo` and `pango`.
 
 ```
                 +---------------------+
