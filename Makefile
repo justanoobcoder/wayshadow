@@ -80,4 +80,9 @@ install: $(TARGET)
 	install -D -m 644 man/keypop.1 /usr/local/share/man/man1/keypop.1
 	install -D -m 644 man/keypop.conf.5 /usr/local/share/man/man5/keypop.conf.5
 
-.PHONY: all clean install test
+uninstall:
+	rm -f /usr/local/bin/$(TARGET)
+	rm -f /usr/local/share/man/man1/keypop.1
+	rm -f /usr/local/share/man/man5/keypop.conf.5
+
+.PHONY: all clean install uninstall test
