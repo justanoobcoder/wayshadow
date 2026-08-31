@@ -1,0 +1,20 @@
+#!/usr/bin/make -f
+
+# dh_auto_build and dh_auto_install don't know about our Makefile's special
+# variables, so we override them explicitly.
+
+%:
+	dh $@
+
+override_dh_auto_build:
+	$(MAKE) WAYLAND_PROTOCOLS_DIR=/usr/share/wayland-protocols \
+	        GIT_COMMIT=$(shell git rev-parse --short HEAD 2>/dev/null || echo unknown)
+
+override_dh_auto_install:
+	$(MAKE) install \
+	        DESTDIR=$(CURDIR)/debian/keypop \
+	        PREFIX=/usr \
+	        WAYLAND_PROTOCOLS_DIR=/usr/share/wayland-protocols
+
+override_dh_auto_test:
+	$(MAKE) test WAYLAND_PROTOCOLS_DIR=/usr/share/wayland-protocols

@@ -1,0 +1,100 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+
+jobs:
+  package-deb:
+    name: Package (.deb)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install build dependencies
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y --no-install-recommends \
+            build-essential devscripts debhelper \
+            pkg-config wayland-scanner++ wayland-protocols \
+            libwayland-dev libcairo2-dev libpango1.0-dev \
+            libinput-dev libudev-dev libxkbcommon-dev \
+            libgtk-3-dev libappindicator3-dev
+
+      - name: Build .deb package
+        run: |
+          # dpkg-buildpackage reads debian/ at the project root
+          cp -r packaging/debian debian
+          dpkg-buildpackage -us -uc -b
+          mkdir -p dist
+          mv ../*.deb dist/
+
+      - name: Upload .deb artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: deb-package
+          path: dist/*.deb
+
+  package-arch:
+    name: Package (.pkg.tar.zst)
+    runs-on: ubuntu-latest
+    container: archlinux:latest
+    steps:
+      - name: Install git (required by actions/checkout)
+        run: pacman -Sy --noconfirm git
+
+      - uses: actions/checkout@v4
+
+      - name: Install build dependencies
+        run: |
+          pacman -S --noconfirm --needed \
+            base-devel \
+            wayland wayland-protocols \
+            cairo pango libinput libxkbcommon \
+            gtk3 libappindicator-gtk3
+
+      - name: Create source tarball for PKGBUILD
+        run: |
+          VERSION=$(cat VERSION)
+          mkdir -p /tmp/keypop-${VERSION}
+          cp -r . /tmp/keypop-${VERSION}/
+          rm -rf /tmp/keypop-${VERSION}/.git
+          tar -czf packaging/arch/keypop-${VERSION}.tar.gz \
+            -C /tmp keypop-${VERSION}
+
+      - name: Build Arch package
+        run: |
+          cd packaging/arch
+          useradd -m builder
+          chown -R builder:builder .
+          echo 'builder ALL=(ALL) NOPASSWD: ALL' >> /etc/sudoers
+          su builder -c "makepkg -sf --noconfirm"
+          mkdir -p ../../dist
+          mv *.pkg.tar.zst ../../dist/
+
+      - name: Upload .pkg.tar.zst artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: arch-package
+          path: dist/*.pkg.tar.zst
+
+  release:
+    name: Create GitHub Release
+    needs: [package-deb, package-arch]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: dist
+          merge-multiple: true
+
+      - name: Create release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: dist/*
+          generate_release_notes: true

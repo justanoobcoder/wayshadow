@@ -1,0 +1,35 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build-and-test:
+    name: Build & Test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y --no-install-recommends \
+            g++ gcc make pkg-config \
+            wayland-scanner++ wayland-protocols \
+            libwayland-dev \
+            libcairo2-dev \
+            libpango1.0-dev \
+            libinput-dev \
+            libudev-dev \
+            libxkbcommon-dev \
+            libgtk-3-dev \
+            libappindicator3-dev
+
+      - name: Build
+        run: make
+
+      - name: Test
+        run: make test
