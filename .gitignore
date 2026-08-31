@@ -1,0 +1,17 @@
+# Build artifacts
+*.o
+*.a
+*.so
+xdg-shell-protocol.c
+xdg-shell-client-protocol.h
+include/keypop/version.hpp
+
+# Binaries
+/keypop
+/test_runner
+
+
+# Build dirs / editor caches
+.cache/
+build/
+bin/
