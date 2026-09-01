@@ -1,10 +1,10 @@
-#include "keypop/app.hpp"
+#include "wayshadow/app.hpp"
 
 #include <cerrno>
 #include <cstdio>
 #include <ctime>
 
-namespace keypop {
+namespace wayshadow {
 
     namespace {
         long time_diff_ms(const struct timespec* start, const struct timespec* end) {
@@ -186,4 +186,4 @@ namespace keypop {
         return 0;
     }
 
-} // namespace keypop
+} // namespace wayshadow

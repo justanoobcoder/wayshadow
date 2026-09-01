@@ -1,7 +1,7 @@
-#include "keypop/draw.hpp"
+#include "wayshadow/draw.hpp"
 
-#include "keypop/icons.hpp"
-#include "keypop/shm.hpp"
+#include "wayshadow/icons.hpp"
+#include "wayshadow/shm.hpp"
 
 #include <algorithm>
 #include <cairo.h>
@@ -15,7 +15,7 @@
 #include <unistd.h>
 #include <vector>
 
-namespace keypop {
+namespace wayshadow {
 
     namespace {
 
@@ -267,4 +267,4 @@ namespace keypop {
         *buffer_out = new_buffer;
     }
 
-} // namespace keypop
+} // namespace wayshadow

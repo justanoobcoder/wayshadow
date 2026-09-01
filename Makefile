@@ -29,7 +29,7 @@ SRCS = src/color.cpp \
 
 OBJS = $(SRCS:.cpp=.o) xdg-shell-protocol.o
 
-TARGET = keypop
+TARGET = wayshadow
 
 WAYLAND_PROTOCOLS_DIR ?= /usr/share/wayland-protocols
 
@@ -42,7 +42,7 @@ all: $(TARGET)
 $(TARGET): $(OBJS) src/main.o
 	$(CXX) $(CXXFLAGS) -o $@ $^ $(LIBS)
 
-%.o: %.cpp include/keypop/version.hpp xdg-shell-client-protocol.h
+%.o: %.cpp include/wayshadow/version.hpp xdg-shell-client-protocol.h
 	$(CXX) $(CXXFLAGS) $(INCLUDES) -c $< -o $@
 
 xdg-shell-protocol.o: xdg-shell-protocol.c xdg-shell-client-protocol.h
@@ -54,12 +54,12 @@ xdg-shell-protocol.c:
 xdg-shell-client-protocol.h:
 	wayland-scanner client-header $(WAYLAND_PROTOCOLS_DIR)/stable/xdg-shell/xdg-shell.xml $@
 
-include/keypop/version.hpp: VERSION
-	@mkdir -p include/keypop
+include/wayshadow/version.hpp: VERSION
+	@mkdir -p include/wayshadow
 	@echo "/* auto-generated, do not edit */"       > $@
 	@echo "#pragma once"                            >> $@
 	@echo "#include <string_view>"                  >> $@
-	@echo "namespace keypop {"                      >> $@
+	@echo "namespace wayshadow {"                      >> $@
 	@echo "inline constexpr std::string_view APP_VERSION = \"$(VERSION)\";"    >> $@
 	@echo "inline constexpr std::string_view GIT_COMMIT  = \"$(GIT_COMMIT)\";" >> $@
 	@echo "inline constexpr std::string_view BUILD_DATE  = \"$(BUILD_DATE)\";" >> $@
@@ -77,16 +77,16 @@ test: test_runner
 clean:
 	rm -f src/*.o tests/*.o *.o $(TARGET) test_runner
 	rm -f xdg-shell-protocol.c xdg-shell-client-protocol.h
-	rm -f include/keypop/version.hpp
+	rm -f include/wayshadow/version.hpp
 
 install: $(TARGET)
 	install -D -m 755 $(TARGET)         $(DESTDIR)$(BINDIR)/$(TARGET)
-	install -D -m 644 man/keypop.1      $(DESTDIR)$(MANDIR)/man1/keypop.1
-	install -D -m 644 man/keypop.conf.5 $(DESTDIR)$(MANDIR)/man5/keypop.conf.5
+	install -D -m 644 man/wayshadow.1      $(DESTDIR)$(MANDIR)/man1/wayshadow.1
+	install -D -m 644 man/wayshadow.conf.5 $(DESTDIR)$(MANDIR)/man5/wayshadow.conf.5
 
 uninstall:
 	rm -f $(DESTDIR)$(BINDIR)/$(TARGET)
-	rm -f $(DESTDIR)$(MANDIR)/man1/keypop.1
-	rm -f $(DESTDIR)$(MANDIR)/man5/keypop.conf.5
+	rm -f $(DESTDIR)$(MANDIR)/man1/wayshadow.1
+	rm -f $(DESTDIR)$(MANDIR)/man5/wayshadow.conf.5
 
 .PHONY: all clean install uninstall test

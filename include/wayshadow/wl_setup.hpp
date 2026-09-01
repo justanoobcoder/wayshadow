@@ -1,11 +1,11 @@
 #pragma once
 
-#include "keypop/state.hpp"
+#include "wayshadow/state.hpp"
 #include "xdg-shell-client-protocol.h"
 
 #include <wayland-client.h>
 
-namespace keypop {
+namespace wayshadow {
 
     class WaylandContext {
       public:
@@ -44,4 +44,4 @@ namespace keypop {
         ClientState* state_{nullptr};
     };
 
-} // namespace keypop
+} // namespace wayshadow

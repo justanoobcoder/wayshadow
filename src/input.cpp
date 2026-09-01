@@ -1,4 +1,4 @@
-#include "keypop/input.hpp"
+#include "wayshadow/input.hpp"
 
 #include <algorithm>
 #include <cstdio>
@@ -10,7 +10,7 @@
 #include <unistd.h>
 #include <utility>
 
-namespace keypop {
+namespace wayshadow {
 
     namespace {
 
@@ -128,4 +128,4 @@ namespace keypop {
         }
     }
 
-} // namespace keypop
+} // namespace wayshadow

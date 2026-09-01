@@ -1,10 +1,10 @@
-#include "keypop/window.hpp"
+#include "wayshadow/window.hpp"
 
-#include "keypop/draw.hpp"
+#include "wayshadow/draw.hpp"
 
 #include <utility>
 
-namespace keypop {
+namespace wayshadow {
 
     WindowManager::WindowManager(WaylandContext& wl_ctx) : wl_ctx_(&wl_ctx) {}
 
@@ -102,7 +102,7 @@ namespace keypop {
 
         xdg_toplevel_ = xdg_surface_get_toplevel(xdg_surface_);
         xdg_toplevel_add_listener(xdg_toplevel_, &toplevel_listener, this);
-        xdg_toplevel_set_app_id(xdg_toplevel_, "keypop");
+        xdg_toplevel_set_app_id(xdg_toplevel_, "wayshadow");
         xdg_toplevel_set_title(xdg_toplevel_, "Show Me The Key");
 
         wl_surface_commit(surface_);
@@ -138,4 +138,4 @@ namespace keypop {
         Renderer::redraw(state, surface_, wl_ctx_->shm(), &buffer_);
     }
 
-} // namespace keypop
+} // namespace wayshadow

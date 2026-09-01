@@ -15,7 +15,7 @@
 }:
 
 stdenv.mkDerivation {
-  pname = "keypop";
+  pname = "wayshadow";
   version = "0.1.0";
 
   src = ../..;
@@ -45,19 +45,19 @@ stdenv.mkDerivation {
   installPhase = ''
     runHook preInstall
 
-    install -D -m 755 keypop        $out/bin/keypop
-    install -D -m 644 man/keypop.1  $out/share/man/man1/keypop.1
-    install -D -m 644 man/keypop.conf.5 $out/share/man/man5/keypop.conf.5
+    install -D -m 755 wayshadow        $out/bin/wayshadow
+    install -D -m 644 man/wayshadow.1  $out/share/man/man1/wayshadow.1
+    install -D -m 644 man/wayshadow.conf.5 $out/share/man/man5/wayshadow.conf.5
 
     runHook postInstall
   '';
 
   meta = {
     description = "Wayland keystroke visualizer";
-    homepage = "https://github.com/justanoobcoder/keypop";
+    homepage = "https://github.com/justanoobcoder/wayshadow";
     license = lib.licenses.mit;
     maintainers = with lib; [ justanoobcoder ];
     platforms = lib.platforms.linux;
-    mainProgram = "keypop";
+    mainProgram = "wayshadow";
   };
 }

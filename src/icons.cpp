@@ -1,11 +1,11 @@
-#include "keypop/icons.hpp"
+#include "wayshadow/icons.hpp"
 
 #include <cmath>
 #include <cstdlib>
 #include <numbers>
 #include <string>
 
-namespace keypop {
+namespace wayshadow {
 
     bool Icons::is_icon_key(std::string_view key) noexcept {
         if (key == "Enter"
@@ -312,4 +312,4 @@ namespace keypop {
         cairo_restore(cr);
     }
 
-} // namespace keypop
+} // namespace wayshadow

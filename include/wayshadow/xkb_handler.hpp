@@ -1,11 +1,11 @@
 #pragma once
 
-#include "keypop/state.hpp"
+#include "wayshadow/state.hpp"
 
 #include <cstdint>
 #include <xkbcommon/xkbcommon.h>
 
-namespace keypop {
+namespace wayshadow {
 
     class XkbHandler {
       public:
@@ -32,4 +32,4 @@ namespace keypop {
         struct xkb_state* state_{nullptr};
     };
 
-} // namespace keypop
+} // namespace wayshadow

@@ -1,7 +1,7 @@
 Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
-Upstream-Name: keypop
+Upstream-Name: wayshadow
 Upstream-Contact: justanoobcoder <syaorancode@gmail.com>
-Source: https://github.com/justanoobcoder/keypop
+Source: https://github.com/justanoobcoder/wayshadow
 
 Files: *
 Copyright: 2026 justanoobcoder

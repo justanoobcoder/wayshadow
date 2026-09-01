@@ -1,6 +1,12 @@
 MIT License
 
-Copyright (c) 2025 Yossef Sabry
+WayShadow - Copyright (c) 2026 Nguyen Hong Hiep (justanoobcoder)
+Ported to C++ and modified from keypop.
+
+---
+
+Original work:
+keypop - Copyright (c) 2025 Yossef Sabry
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal

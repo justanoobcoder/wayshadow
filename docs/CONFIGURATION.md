@@ -1,17 +1,17 @@
-# Configuration Guide for keypop
+# Configuration Guide for wayshadow
 
-`keypop` can be configured via a configuration file, command line flags, or a combination of both (CLI options override config file options).
+`wayshadow` can be configured via a configuration file, command line flags, or a combination of both (CLI options override config file options).
 
 ---
 
 ## 1. Configuration File
 
 The default configuration file path is:
-`~/.config/keypop/keypop.conf` (or `$XDG_CONFIG_HOME/keypop/keypop.conf`).
+`~/.config/wayshadow/wayshadow.conf` (or `$XDG_CONFIG_HOME/wayshadow/wayshadow.conf`).
 
 The file follows standard INI format with a `[settings]` group.
 
-### Example `keypop.conf`
+### Example `wayshadow.conf`
 ```ini
 [settings]
 # Background color (Hex code #RRGGBB or #RRGGBBAA)
@@ -55,5 +55,5 @@ All settings can be specified or overridden using command line arguments:
 ## 3. Priority Order
 
 1. **Command line flags** (highest priority)
-2. **Configuration file** (`~/.config/keypop/keypop.conf`)
+2. **Configuration file** (`~/.config/wayshadow/wayshadow.conf`)
 3. **Hardcoded defaults** (fallback)

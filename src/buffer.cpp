@@ -1,8 +1,8 @@
-#include "keypop/buffer.hpp"
+#include "wayshadow/buffer.hpp"
 
 #include <numeric>
 
-namespace keypop {
+namespace wayshadow {
 
     std::string TextBuffer::full_text() const {
         std::string result;
@@ -107,4 +107,4 @@ namespace keypop {
         last_key_count_ = 0;
     }
 
-} // namespace keypop
+} // namespace wayshadow

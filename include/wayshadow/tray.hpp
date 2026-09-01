@@ -1,12 +1,12 @@
 #pragma once
 
-#include "keypop/state.hpp"
-#include "keypop/window.hpp"
+#include "wayshadow/state.hpp"
+#include "wayshadow/window.hpp"
 
 #include <gtk/gtk.h>
 #include <libappindicator/app-indicator.h>
 
-namespace keypop {
+namespace wayshadow {
 
     class TrayIcon {
       public:
@@ -33,4 +33,4 @@ namespace keypop {
         GtkWidget* toggle_item_{nullptr};
     };
 
-} // namespace keypop
+} // namespace wayshadow

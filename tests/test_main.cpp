@@ -7,7 +7,7 @@ void test_buffer_operations();
 
 int main() {
     std::cout << "========================================\n";
-    std::cout << " Running keypop unit tests\n";
+    std::cout << " Running wayshadow unit tests\n";
     std::cout << "========================================\n";
 
     test_color_parsing();

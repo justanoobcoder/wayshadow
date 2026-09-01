@@ -1,6 +1,8 @@
-# keypop
+# wayshadow
 
 A lightweight, elegant keystroke visualizer for Wayland compositors.
+
+WayShadow is a C++ rewrite/port of [keypop](https://github.com/yossefsabry/keypop) by [Yossef Sabry](https://github.com/yossefsabry).
 
 ## Documentation
 
@@ -11,19 +13,19 @@ A lightweight, elegant keystroke visualizer for Wayland compositors.
 
 ### NixOS
 
-Add keypop input url to your `flake.nix`:
+Add wayshadow input url to your `flake.nix`:
 ```nix
 inputs = {
   nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
 
-  keypop = {
-    url = "github:justanoobcoder/keypop";
+  wayshadow = {
+    url = "github:justanoobcoder/wayshadow";
     inputs.nixpkgs.follows = "nixpkgs";
   };
 };
 ```
 
-Add keypop to package list:
+Add wayshadow to package list:
 ```nix
 {
   pkgs,
@@ -31,7 +33,7 @@ Add keypop to package list:
   ...
 }:{
   environment.systemPackages = with pkgs; [
-    inputs.keypop.packages.${pkgs.stdenv.hostPlatform.system}.default
+    inputs.wayshadow.packages.${pkgs.stdenv.hostPlatform.system}.default
   ];
 }
 ```
@@ -66,7 +68,7 @@ sudo make uninstall
 
 ## How to use
 
-Keypop requires access to input devices, so add your user to the `input` group (NixOS users can skip this since the above configuration already added your user to `input` group):
+Wayshadow requires access to input devices, so add your user to the `input` group (NixOS users can skip this since the above configuration already added your user to `input` group):
 
 ```bash
 sudo usermod -aG input $USER
@@ -75,13 +77,13 @@ sudo usermod -aG input $USER
 
 Then run:
 ```bash
-keypop
+wayshadow
 ```
 
 Or run with custom options:
 ```bash
 # E.g., Blue background, Red text, Size 80, 1000x200 window, 80% opacity, hide after 5 seconds
-keypop -b "#0000FF" -c "#FF0000" -s 80 -g 1000x200 -o 0.8 -t 5000
+wayshadow -b "#0000FF" -c "#FF0000" -s 80 -g 1000x200 -o 0.8 -t 5000
 ```
 
 Options:
@@ -96,7 +98,7 @@ Options:
 
 ## Configuration
 
-Keypop can be configured via config file. Create a file named `keypop.conf` in `$XDG_CONFIG_HOME/keypop/` and add the following:
+Wayshadow can be configured via config file. Create a file named `wayshadow.conf` in `$XDG_CONFIG_HOME/wayshadow/` and add the following:
 
 ```
 [settings]

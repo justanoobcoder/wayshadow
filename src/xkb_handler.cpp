@@ -1,10 +1,10 @@
-#include "keypop/xkb_handler.hpp"
+#include "wayshadow/xkb_handler.hpp"
 
 #include <cstring>
 #include <libinput.h>
 #include <utility>
 
-namespace keypop {
+namespace wayshadow {
 
     XkbHandler::XkbHandler() {
         ctx_ = xkb_context_new(XKB_CONTEXT_NO_FLAGS);
@@ -281,4 +281,4 @@ namespace keypop {
         }
     }
 
-} // namespace keypop
+} // namespace wayshadow

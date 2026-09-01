@@ -1,9 +1,9 @@
-#include "keypop/color.hpp"
+#include "wayshadow/color.hpp"
 
 #include <charconv>
 #include <cstdint>
 
-namespace keypop {
+namespace wayshadow {
 
     namespace {
         [[nodiscard]] std::optional<uint8_t> parse_hex_byte(std::string_view sv) noexcept {
@@ -51,4 +51,4 @@ namespace keypop {
         };
     }
 
-} // namespace keypop
+} // namespace wayshadow

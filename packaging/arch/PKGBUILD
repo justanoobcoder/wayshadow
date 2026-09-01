@@ -1,10 +1,10 @@
 # Maintainer: justanoobcoder <syaorancode@gmail.com>
-pkgname=keypop
+pkgname=wayshadow
 pkgver=0.1.0
 pkgrel=1
 pkgdesc="A lightweight, elegant keystroke visualizer for Wayland compositors"
 arch=('x86_64' 'aarch64')
-url="https://github.com/justanoobcoder/keypop"
+url="https://github.com/justanoobcoder/wayshadow"
 license=('MIT')
 depends=(
     'wayland'

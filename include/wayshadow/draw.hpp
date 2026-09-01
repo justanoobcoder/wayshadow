@@ -1,10 +1,10 @@
 #pragma once
 
-#include "keypop/state.hpp"
+#include "wayshadow/state.hpp"
 
 #include <wayland-client.h>
 
-namespace keypop {
+namespace wayshadow {
 
     class Renderer {
       public:
@@ -16,4 +16,4 @@ namespace keypop {
         redraw(ClientState& state, struct wl_surface* surface, struct wl_shm* shm, struct wl_buffer** buffer_out);
     };
 
-} // namespace keypop
+} // namespace wayshadow

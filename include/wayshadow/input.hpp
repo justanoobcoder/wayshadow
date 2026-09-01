@@ -1,13 +1,13 @@
 #pragma once
 
-#include "keypop/state.hpp"
+#include "wayshadow/state.hpp"
 
 #include <functional>
 
 struct libinput;
 struct udev;
 
-namespace keypop {
+namespace wayshadow {
 
     class InputManager {
       public:
@@ -32,4 +32,4 @@ namespace keypop {
         ClientState* state_{nullptr};
     };
 
-} // namespace keypop
+} // namespace wayshadow

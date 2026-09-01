@@ -2,7 +2,7 @@
 
 #include <cstddef>
 
-namespace keypop {
+namespace wayshadow {
 
     class ShmPool {
       public:
@@ -18,4 +18,4 @@ namespace keypop {
         [[nodiscard]] static int allocate_shm_file(size_t size) noexcept;
     };
 
-} // namespace keypop
+} // namespace wayshadow

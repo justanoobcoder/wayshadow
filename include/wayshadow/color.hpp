@@ -3,7 +3,7 @@
 #include <optional>
 #include <string_view>
 
-namespace keypop {
+namespace wayshadow {
 
     struct Color {
         double r{0.0};
@@ -29,4 +29,4 @@ namespace keypop {
         inline constexpr Color ComboOrange{0.95, 0.61, 0.07, 1.0};
     } // namespace colors
 
-} // namespace keypop
+} // namespace wayshadow

@@ -1,10 +1,10 @@
-#include "keypop/wl_setup.hpp"
+#include "wayshadow/wl_setup.hpp"
 
 #include <cstring>
 #include <unistd.h>
 #include <utility>
 
-namespace keypop {
+namespace wayshadow {
 
     WaylandContext::~WaylandContext() { disconnect(); }
 
@@ -162,4 +162,4 @@ namespace keypop {
         return (compositor_ && shm_ && xdg_wm_base_);
     }
 
-} // namespace keypop
+} // namespace wayshadow

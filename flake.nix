@@ -1,5 +1,5 @@
 {
-  description = "keypop – a lightweight Wayland keystroke visualizer";
+  description = "wayshadow – a lightweight Wayland keystroke visualizer";
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
@@ -14,7 +14,7 @@
     }:
     let
       overlay = final: _: {
-        keypop = final.callPackage ./packaging/nix/package.nix { };
+        wayshadow = final.callPackage ./packaging/nix/package.nix { };
       };
     in
     flake-utils.lib.eachDefaultSystem (
@@ -44,12 +44,12 @@
       in
       {
         packages = {
-          inherit (pkgs) keypop;
-          default = pkgs.keypop;
+          inherit (pkgs) wayshadow;
+          default = pkgs.wayshadow;
         };
 
         devShells.default = pkgs.mkShell {
-          name = "keypop-dev";
+          name = "wayshadow-dev";
 
           packages =
             nativeBuildDeps
@@ -66,19 +66,19 @@
 
           shellHook = ''
             export WAYLAND_PROTOCOLS_DIR="${pkgs.wayland-protocols}/share/wayland-protocols"
-            echo "keypop dev shell ready"
+            echo "wayshadow dev shell ready"
             echo "  make          – build the binary"
             echo "  make test     – run the test suite"
             echo "  make install  – install to PREFIX (default /usr)"
           '';
         };
 
-        checks.default = pkgs.keypop;
+        checks.default = pkgs.wayshadow;
       }
     )
 
     // {
       overlays.default = overlay;
-      overlays.keypop = overlay;
+      overlays.wayshadow = overlay;
     };
 }

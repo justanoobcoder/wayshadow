@@ -1,10 +1,10 @@
-#include "keypop/tray.hpp"
+#include "wayshadow/tray.hpp"
 
 #include <cstdio>
 #include <filesystem>
 #include <unistd.h>
 
-namespace keypop {
+namespace wayshadow {
 
     TrayIcon::TrayIcon(ClientState& state, WindowManager& win_mgr, GMainLoop* loop)
         : state_(&state), win_mgr_(&win_mgr), loop_(loop) {}
@@ -48,7 +48,7 @@ namespace keypop {
             return false;
         }
 
-        indicator_ = app_indicator_new("keypop-tray", "input-keyboard", APP_INDICATOR_CATEGORY_APPLICATION_STATUS);
+        indicator_ = app_indicator_new("wayshadow-tray", "input-keyboard", APP_INDICATOR_CATEGORY_APPLICATION_STATUS);
         app_indicator_set_status(indicator_, APP_INDICATOR_STATUS_ACTIVE);
 
         char cwd[1024];
@@ -82,4 +82,4 @@ namespace keypop {
         return true;
     }
 
-} // namespace keypop
+} // namespace wayshadow

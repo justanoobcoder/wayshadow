@@ -1,11 +1,11 @@
 #pragma once
 
-#include "keypop/color.hpp"
+#include "wayshadow/color.hpp"
 
 #include <filesystem>
 #include <string>
 
-namespace keypop {
+namespace wayshadow {
 
     struct Config {
         Color bg_color{colors::DefaultBackground};
@@ -36,4 +36,4 @@ namespace keypop {
         static void print_version();
     };
 
-} // namespace keypop
+} // namespace wayshadow

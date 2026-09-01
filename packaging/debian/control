@@ -1,4 +1,4 @@
-Source: keypop
+Source: wayshadow
 Section: utils
 Priority: optional
 Maintainer: justanoobcoder <syaorancode@gmail.com>
@@ -19,13 +19,13 @@ Build-Depends:
  libgtk-3-dev,
  libappindicator3-dev,
 Standards-Version: 4.6.2
-Homepage: https://github.com/justanoobcoder/keypop
+Homepage: https://github.com/justanoobcoder/wayshadow
 Rules-Requires-Root: no
 
-Package: keypop
+Package: wayshadow
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}
 Description: Wayland keystroke visualizer
- keypop is a lightweight overlay that displays keystrokes and mouse clicks
+ wayshadow is a lightweight overlay that displays keystrokes and mouse clicks
  in real time on Wayland compositors. It reads input via libinput/udev and
  renders an anti-aliased overlay using Cairo and Pango.

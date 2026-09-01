@@ -1,16 +1,16 @@
 #pragma once
 
-#include "keypop/config.hpp"
-#include "keypop/input.hpp"
-#include "keypop/state.hpp"
-#include "keypop/tray.hpp"
-#include "keypop/window.hpp"
-#include "keypop/wl_setup.hpp"
-#include "keypop/xkb_handler.hpp"
+#include "wayshadow/config.hpp"
+#include "wayshadow/input.hpp"
+#include "wayshadow/state.hpp"
+#include "wayshadow/tray.hpp"
+#include "wayshadow/window.hpp"
+#include "wayshadow/wl_setup.hpp"
+#include "wayshadow/xkb_handler.hpp"
 
 #include <glib.h>
 
-namespace keypop {
+namespace wayshadow {
 
     class Application {
       public:
@@ -42,4 +42,4 @@ namespace keypop {
         GMainLoop* loop_{nullptr};
     };
 
-} // namespace keypop
+} // namespace wayshadow

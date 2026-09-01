@@ -5,7 +5,7 @@
 #include <string_view>
 #include <vector>
 
-namespace keypop {
+namespace wayshadow {
 
     class TextBuffer {
       public:
@@ -46,4 +46,4 @@ namespace keypop {
         int last_key_count_{0};
     };
 
-} // namespace keypop
+} // namespace wayshadow

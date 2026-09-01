@@ -60,11 +60,11 @@ jobs:
       - name: Create source tarball for PKGBUILD
         run: |
           VERSION=$(cat VERSION)
-          mkdir -p /tmp/keypop-${VERSION}
-          cp -r . /tmp/keypop-${VERSION}/
-          rm -rf /tmp/keypop-${VERSION}/.git
-          tar -czf packaging/arch/keypop-${VERSION}.tar.gz \
-            -C /tmp keypop-${VERSION}
+          mkdir -p /tmp/wayshadow-${VERSION}
+          cp -r . /tmp/wayshadow-${VERSION}/
+          rm -rf /tmp/wayshadow-${VERSION}/.git
+          tar -czf packaging/arch/wayshadow-${VERSION}.tar.gz \
+            -C /tmp wayshadow-${VERSION}
 
       - name: Build Arch package
         run: |

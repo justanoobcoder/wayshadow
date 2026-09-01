@@ -1,4 +1,4 @@
-#include "keypop/buffer.hpp"
+#include "wayshadow/buffer.hpp"
 
 #include <cassert>
 #include <iostream>
@@ -6,7 +6,7 @@
 void test_buffer_operations() {
     std::cout << "[TEST] Running test_buffer_operations...\n";
 
-    keypop::TextBuffer buf{};
+    wayshadow::TextBuffer buf{};
     assert(buf.empty());
     assert(buf.segment_count() == 0);
 

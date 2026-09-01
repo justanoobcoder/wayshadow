@@ -1,11 +1,11 @@
 #pragma once
 
-#include "keypop/color.hpp"
+#include "wayshadow/color.hpp"
 
 #include <cairo.h>
 #include <string_view>
 
-namespace keypop {
+namespace wayshadow {
 
     class Icons {
       public:
@@ -14,4 +14,4 @@ namespace keypop {
         draw(cairo_t* cr, std::string_view key_name, double x, double y, double size, const Color& color) noexcept;
     };
 
-} // namespace keypop
+} // namespace wayshadow

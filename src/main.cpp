@@ -1,26 +1,26 @@
-#include "keypop/app.hpp"
-#include "keypop/config.hpp"
+#include "wayshadow/app.hpp"
+#include "wayshadow/config.hpp"
 
 #include <iostream>
 
 int main(int argc, char* argv[]) {
-    const auto cli = keypop::CliOptions::parse(argc, argv);
+    const auto cli = wayshadow::CliOptions::parse(argc, argv);
 
     switch (cli.action) {
-    case keypop::CliOptions::Action::ShowHelp:
-        keypop::CliOptions::print_usage(argv[0]);
+    case wayshadow::CliOptions::Action::ShowHelp:
+        wayshadow::CliOptions::print_usage(argv[0]);
         return 0;
-    case keypop::CliOptions::Action::ShowVersion:
-        keypop::CliOptions::print_version();
+    case wayshadow::CliOptions::Action::ShowVersion:
+        wayshadow::CliOptions::print_version();
         return 0;
-    case keypop::CliOptions::Action::Error:
+    case wayshadow::CliOptions::Action::Error:
         std::cerr << "Error: " << cli.error_message << "\n\n";
-        keypop::CliOptions::print_usage(argv[0]);
+        wayshadow::CliOptions::print_usage(argv[0]);
         return 1;
-    case keypop::CliOptions::Action::Run:
+    case wayshadow::CliOptions::Action::Run:
         break;
     }
 
-    keypop::Application app(cli.config);
+    wayshadow::Application app(cli.config);
     return app.run();
 }

@@ -1,12 +1,12 @@
 #pragma once
 
-#include "keypop/state.hpp"
-#include "keypop/wl_setup.hpp"
+#include "wayshadow/state.hpp"
+#include "wayshadow/wl_setup.hpp"
 #include "xdg-shell-client-protocol.h"
 
 #include <wayland-client.h>
 
-namespace keypop {
+namespace wayshadow {
 
     class WindowManager {
       public:
@@ -36,4 +36,4 @@ namespace keypop {
         ClientState* state_{nullptr};
     };
 
-} // namespace keypop
+} // namespace wayshadow

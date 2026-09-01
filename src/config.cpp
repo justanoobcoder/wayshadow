@@ -1,6 +1,6 @@
-#include "keypop/config.hpp"
+#include "wayshadow/config.hpp"
 
-#include "keypop/version.hpp"
+#include "wayshadow/version.hpp"
 
 #include <algorithm>
 #include <cstdio>
@@ -9,7 +9,7 @@
 #include <iostream>
 #include <unistd.h>
 
-namespace keypop {
+namespace wayshadow {
 
     Config Config::load_from_file(const std::filesystem::path& path) {
         Config cfg{};
@@ -72,7 +72,7 @@ namespace keypop {
         if (!config_dir) {
             return Config{};
         }
-        const auto conf_path = std::filesystem::path(config_dir) / "keypop" / "keypop.conf";
+        const auto conf_path = std::filesystem::path(config_dir) / "wayshadow" / "wayshadow.conf";
         return load_from_file(conf_path);
     }
 
@@ -169,7 +169,7 @@ namespace keypop {
     }
 
     void CliOptions::print_version() {
-        std::cout << "keypop v" << APP_VERSION << " (build: " << GIT_COMMIT << ", " << BUILD_DATE << ")\n";
+        std::cout << "wayshadow v" << APP_VERSION << " (build: " << GIT_COMMIT << ", " << BUILD_DATE << ")\n";
     }
 
-} // namespace keypop
+} // namespace wayshadow

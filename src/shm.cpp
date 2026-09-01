@@ -1,11 +1,11 @@
-#include "keypop/shm.hpp"
+#include "wayshadow/shm.hpp"
 
 #include <cstdio>
 #include <fcntl.h>
 #include <sys/mman.h>
 #include <unistd.h>
 
-namespace keypop {
+namespace wayshadow {
 
     namespace {
         [[nodiscard]] int create_shm_file() noexcept {
@@ -35,4 +35,4 @@ namespace keypop {
         return fd;
     }
 
-} // namespace keypop
+} // namespace wayshadow

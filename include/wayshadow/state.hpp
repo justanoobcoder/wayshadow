@@ -1,11 +1,11 @@
 #pragma once
 
-#include "keypop/buffer.hpp"
-#include "keypop/config.hpp"
+#include "wayshadow/buffer.hpp"
+#include "wayshadow/config.hpp"
 
 #include <ctime>
 
-namespace keypop {
+namespace wayshadow {
 
     struct MouseState {
         bool lmb{false};
@@ -47,4 +47,4 @@ namespace keypop {
         bool use_combo_color{false};
     };
 
-} // namespace keypop
+} // namespace wayshadow

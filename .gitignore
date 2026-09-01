@@ -4,10 +4,10 @@
 *.so
 xdg-shell-protocol.c
 xdg-shell-client-protocol.h
-include/keypop/version.hpp
+include/wayshadow/version.hpp
 
 # Binaries
-/keypop
+/wayshadow
 /test_runner
 
 
