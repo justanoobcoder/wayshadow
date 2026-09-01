@@ -4,7 +4,7 @@ CC = gcc
 CXXFLAGS = -std=c++20 -Wall -Weffc++ -Wextra -Wconversion -Wsign-conversion -Wshadow -Werror -D_POSIX_C_SOURCE=200809L
 CFLAGS   = -std=c11 -Wall -Wextra -D_POSIX_C_SOURCE=200809L
 
-VERSION    := $(shell cat VERSION 2>/dev/null || echo "0.1.0")
+VERSION    := $(shell cat VERSION 2>/dev/null || echo "1.0.0")
 GIT_COMMIT ?= $(shell git rev-parse --short HEAD 2>/dev/null || echo "unknown")
 BUILD_DATE := $(shell date -u +"%Y-%m-%dT%H:%M:%SZ")
 
