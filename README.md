@@ -1,4 +1,4 @@
-# wayshadow
+# WayShadow
 
 A lightweight, elegant keystroke visualizer for Wayland compositors.
 
@@ -46,6 +46,14 @@ users.users.YOUR_USERNAME = {
     "input"
   ];
 };
+```
+
+### Arch Linux
+
+```bash
+yay -S wayshadow-git
+# or
+yay -S wayshadow-bin
 ```
 
 ## Building
