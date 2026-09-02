@@ -4,6 +4,8 @@ A lightweight, elegant keystroke visualizer for Wayland compositors.
 
 WayShadow is a C++ rewrite/port of [keypop](https://github.com/yossefsabry/keypop) by [Yossef Sabry](https://github.com/yossefsabry).
 
+https://github.com/user-attachments/assets/4c5bfeac-fd29-44fb-8e19-d39c8a84e27f
+
 ## Documentation
 
 - [Architecture Guide](docs/ARCHITECTURE.md)
