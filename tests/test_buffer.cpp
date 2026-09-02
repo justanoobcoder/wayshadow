@@ -1,4 +1,5 @@
 #include "wayshadow/buffer.hpp"
+#include "wayshadow/state.hpp"
 
 #include <cassert>
 #include <iostream>
@@ -75,4 +76,31 @@ void test_buffer_operations() {
     assert(buf.full_text() == "hello ");
 
     std::cout << "[TEST] test_buffer_operations PASSED.\n";
+}
+
+void test_mouse_state() {
+    std::cout << "[TEST] Running test_mouse_state...\n";
+
+    wayshadow::ClientState state{};
+    assert(!state.window_visible);
+    assert(state.mouse.last_button.empty());
+    assert(!state.mouse.lmb);
+    assert(!state.mouse.rmb);
+    assert(!state.mouse.mmb);
+
+    state.mouse.lmb = true;
+    state.mouse.last_button = "LMB ";
+    state.mouse.x = 100;
+    state.mouse.y = 200;
+    assert(state.mouse.last_button == "LMB ");
+
+    // Resetting mouse button on release keeps last_button for display
+    state.mouse.lmb = false;
+    assert(state.mouse.last_button == "LMB ");
+
+    // Clearing on hide / new key
+    state.mouse.last_button.clear();
+    assert(state.mouse.last_button.empty());
+
+    std::cout << "[TEST] test_mouse_state PASSED.\n";
 }
