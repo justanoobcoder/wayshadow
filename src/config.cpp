@@ -37,6 +37,14 @@ namespace wayshadow {
                 g_free(fg);
             }
 
+            gchar* h_col = g_key_file_get_string(keyfile, "settings", "hold_color", nullptr);
+            if (h_col) {
+                if (auto col = Color::from_hex(h_col)) {
+                    cfg.hold_color = *col;
+                }
+                g_free(h_col);
+            }
+
             if (g_key_file_has_key(keyfile, "settings", "font_size", nullptr)) {
                 cfg.font_size =
                     std::max(MIN_FONT_SIZE, g_key_file_get_integer(keyfile, "settings", "font_size", nullptr));

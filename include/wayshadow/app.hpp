@@ -30,6 +30,7 @@ namespace wayshadow {
         static gboolean on_timer_tick(gpointer data);
         static gboolean on_repeat_delay_done(gpointer data);
         static gboolean on_repeat_rate_tick(gpointer data);
+        static gboolean on_hold_timer(gpointer data);
 
         void setup_repeat_timer();
 
@@ -40,6 +41,7 @@ namespace wayshadow {
         std::unique_ptr<WindowManager> win_mgr_{nullptr};
         std::unique_ptr<TrayIcon> tray_{nullptr};
         GMainLoop* loop_{nullptr};
+        unsigned int hold_timer_id_{0};
     };
 
 } // namespace wayshadow

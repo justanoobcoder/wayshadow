@@ -314,16 +314,8 @@ namespace wayshadow {
     }
 
     void Icons::draw_mouse(
-        cairo_t* cr,
-        double x,
-        double y,
-        double width,
-        double height,
-        bool lmb,
-        bool rmb,
-        bool mmb,
-        const Color& stroke_color,
-        const Color& fill_color
+        cairo_t* cr, double x, double y, double width, double height, bool lmb, bool rmb, bool mmb, bool lmb_held,
+        bool rmb_held, bool mmb_held, const Color& stroke_color, const Color& fill_color, const Color& hold_color
     ) noexcept {
         cairo_save(cr);
 
@@ -345,10 +337,11 @@ namespace wayshadow {
         const double line_width = std::max(1.5, w * 0.09);
 
         // 1. Draw button fills if pressed/active
-        cairo_set_source_rgba(cr, fill_color.r, fill_color.g, fill_color.b, fill_color.a);
 
         // LMB fill (top-left compartment)
         if (lmb) {
+            const Color& c = lmb_held ? hold_color : fill_color;
+            cairo_set_source_rgba(cr, c.r, c.g, c.b, c.a);
             cairo_new_path(cr);
             cairo_move_to(cr, cx, y_mid);
             cairo_line_to(cr, x, y_mid);
@@ -365,6 +358,8 @@ namespace wayshadow {
 
         // RMB fill (top-right compartment)
         if (rmb) {
+            const Color& c = rmb_held ? hold_color : fill_color;
+            cairo_set_source_rgba(cr, c.r, c.g, c.b, c.a);
             cairo_new_path(cr);
             cairo_move_to(cr, cx, y_mid);
             cairo_line_to(cr, x + w, y_mid);
@@ -381,6 +376,8 @@ namespace wayshadow {
 
         // MMB fill (scroll wheel)
         if (mmb) {
+            const Color& c = mmb_held ? hold_color : fill_color;
+            cairo_set_source_rgba(cr, c.r, c.g, c.b, c.a);
             cairo_new_path(cr);
             cairo_arc(cr, cx, y_wt + rw, rw, std::numbers::pi, 0.0);
             cairo_line_to(cr, x_wr, y_wb - rw);

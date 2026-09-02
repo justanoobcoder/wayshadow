@@ -245,6 +245,29 @@ namespace wayshadow {
                 display_text.pop_back();
             }
 
+            bool any_button_held =
+                state.mouse.lmb || state.mouse.rmb || state.mouse.mmb || state.mouse.back || state.mouse.forward;
+            bool is_held = false;
+            if (any_button_held && state.mouse.hold_start_time.tv_sec != 0) {
+                struct timespec now{};
+                clock_gettime(CLOCK_MONOTONIC, &now);
+                const long elapsed_ms = (now.tv_sec - state.mouse.hold_start_time.tv_sec) * 1000L
+                    + (now.tv_nsec - state.mouse.hold_start_time.tv_nsec) / 1'000'000L;
+                is_held = (elapsed_ms >= 300);
+            }
+
+            if (state.mouse.click_count > 1) {
+                display_text += " x" + std::to_string(state.mouse.click_count);
+            }
+            if (is_held) {
+                display_text += " (HOLD)";
+            }
+
+            // Trim leading space if any
+            if (!display_text.empty() && display_text.front() == ' ') {
+                display_text = display_text.substr(1);
+            }
+
             cairo_select_font_face(cr, "Monospace", CAIRO_FONT_SLANT_NORMAL, CAIRO_FONT_WEIGHT_NORMAL);
             const double mouse_font_size = state.config.font_size * 0.40;
             cairo_set_font_size(cr, mouse_font_size);
@@ -263,8 +286,8 @@ namespace wayshadow {
                 const double text_y = icon_y + icon_h * 0.5 + text_ext.height * 0.5 - 1.0;
 
                 Icons::draw_mouse(
-                    cr, start_x, icon_y, icon_w, icon_h, draw_lmb, draw_rmb, draw_mmb, state.config.text_color,
-                    state.config.text_color
+                    cr, start_x, icon_y, icon_w, icon_h, draw_lmb, draw_rmb, draw_mmb, state.mouse.lmb, state.mouse.rmb,
+                    state.mouse.mmb, state.config.text_color, state.config.text_color, state.config.hold_color
                 );
 
                 cairo_set_source_rgba(

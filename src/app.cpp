@@ -22,6 +22,10 @@ namespace wayshadow {
             g_source_remove(state_.repeat_timer_id);
             state_.repeat_timer_id = 0;
         }
+        if (hold_timer_id_) {
+            g_source_remove(hold_timer_id_);
+            hold_timer_id_ = 0;
+        }
         if (loop_) {
             g_main_loop_unref(loop_);
             loop_ = nullptr;
@@ -87,6 +91,19 @@ namespace wayshadow {
         if (state_.repeat_key != 0 && state_.repeat_rate > 0 && state_.repeat_delay > 0) {
             state_.repeat_timer_id = g_timeout_add(static_cast<guint>(state_.repeat_delay), on_repeat_delay_done, this);
         }
+    }
+
+    gboolean Application::on_hold_timer(gpointer data) {
+        auto* app = static_cast<Application*>(data);
+        app->hold_timer_id_ = 0;
+        // If any button is still held, trigger a redraw so HOLD state becomes visible
+        auto& m = app->state_.mouse;
+        if ((m.lmb || m.rmb || m.mmb || m.back || m.forward) && app->state_.window_visible) {
+            if (app->win_mgr_) {
+                app->win_mgr_->redraw(app->state_);
+            }
+        }
+        return FALSE; // one-shot
     }
 
     gboolean Application::on_timer_tick(gpointer data) {
@@ -160,6 +177,19 @@ namespace wayshadow {
                             win_mgr_->show_window(state_);
                         }
                     }
+                    state_.needs_redraw = true;
+                    // Schedule a deferred redraw to activate HOLD state after 300ms
+                    if (hold_timer_id_) {
+                        g_source_remove(hold_timer_id_);
+                    }
+                    hold_timer_id_ = g_timeout_add(300, on_hold_timer, this);
+                } else if (button_state == 0 && state_.window_visible) {
+                    // Cancel pending hold timer on release
+                    if (hold_timer_id_) {
+                        g_source_remove(hold_timer_id_);
+                        hold_timer_id_ = 0;
+                    }
+                    // Redraw on release so HOLD state clears immediately
                     state_.needs_redraw = true;
                 }
 

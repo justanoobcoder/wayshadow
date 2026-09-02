@@ -122,7 +122,15 @@ namespace wayshadow {
                 }
 
                 if (pressed) {
+                    if (state_->window_visible && button == state_->mouse.last_button_id) {
+                        state_->mouse.click_count++;
+                    } else {
+                        state_->mouse.click_count = 1;
+                        state_->mouse.last_button_id = button;
+                    }
+
                     clock_gettime(CLOCK_MONOTONIC, &state_->mouse.last_click_time);
+                    clock_gettime(CLOCK_MONOTONIC, &state_->mouse.hold_start_time);
                     clock_gettime(CLOCK_MONOTONIC, &state_->last_key_time);
 
                     state_->mouse.has_click = true;
@@ -150,6 +158,9 @@ namespace wayshadow {
                     }
 
                     state_->mouse.last_button = btn_str;
+                } else {
+                    // Clear hold start time on release
+                    state_->mouse.hold_start_time = {0, 0};
                 }
 
                 if (button_callback_) {

@@ -10,6 +10,7 @@ namespace wayshadow {
     struct Config {
         Color bg_color{colors::DefaultBackground};
         Color text_color{colors::White};
+        Color hold_color{0.9, 0.2, 0.2, 1.0};
         int font_size{65};
         int width{840};
         int height{130};

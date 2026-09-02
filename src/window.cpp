@@ -125,6 +125,8 @@ namespace wayshadow {
         state.mouse.last_back = false;
         state.mouse.last_forward = false;
         state.mouse.has_click = false;
+        state.mouse.click_count = 0;
+        state.mouse.last_button_id = 0;
 
         if (surface_) {
             wl_surface_attach(surface_, nullptr, 0, 0);
