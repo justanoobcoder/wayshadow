@@ -169,7 +169,12 @@ namespace wayshadow {
                 }
             },
             [this](double /*dx*/, double /*dy*/) {
-                if ((state_.mouse.lmb || state_.mouse.rmb || state_.mouse.mmb) && state_.window_visible) {
+                if ((state_.mouse.lmb
+                     || state_.mouse.rmb
+                     || state_.mouse.mmb
+                     || state_.mouse.back
+                     || state_.mouse.forward)
+                    && state_.window_visible) {
                     clock_gettime(CLOCK_MONOTONIC, &state_.last_key_time);
                     if (win_mgr_) {
                         win_mgr_->redraw(state_);

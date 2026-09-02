@@ -227,14 +227,28 @@ namespace wayshadow {
         }
 
         // Render mouse indicator bar
-        const bool is_mouse_active = state.mouse.lmb || state.mouse.rmb || state.mouse.mmb || state.mouse.has_click;
+        const bool is_mouse_active = state.mouse.lmb
+            || state.mouse.rmb
+            || state.mouse.mmb
+            || state.mouse.back
+            || state.mouse.forward
+            || state.mouse.has_click;
         if (is_mouse_active) {
             const bool draw_lmb = state.mouse.lmb || (state.mouse.has_click && state.mouse.last_lmb);
             const bool draw_rmb = state.mouse.rmb || (state.mouse.has_click && state.mouse.last_rmb);
             const bool draw_mmb = state.mouse.mmb || (state.mouse.has_click && state.mouse.last_mmb);
+            const bool draw_back = state.mouse.back || (state.mouse.has_click && state.mouse.last_back);
+            const bool draw_forward = state.mouse.forward || (state.mouse.has_click && state.mouse.last_forward);
+
+            const bool show_mouse_icon = draw_lmb || draw_rmb || draw_mmb;
+            std::string side_text;
+            if (draw_back)
+                side_text += "Back ";
+            if (draw_forward)
+                side_text += "Forward ";
 
             const std::string coord_text =
-                "(" + std::to_string(state.mouse.x) + ", " + std::to_string(state.mouse.y) + ")";
+                side_text + "(" + std::to_string(state.mouse.x) + ", " + std::to_string(state.mouse.y) + ")";
 
             cairo_select_font_face(cr, "Monospace", CAIRO_FONT_SLANT_NORMAL, CAIRO_FONT_WEIGHT_NORMAL);
             const double mouse_font_size = state.config.font_size * 0.40;
@@ -243,26 +257,38 @@ namespace wayshadow {
             cairo_text_extents_t text_ext;
             cairo_text_extents(cr, coord_text.c_str(), &text_ext);
 
-            const double icon_h = std::max(18.0, mouse_font_size * 1.30);
-            const double icon_w = icon_h * 0.58;
-            const double gap = 8.0;
-            const double total_w = icon_w + gap + text_ext.width;
+            if (show_mouse_icon) {
+                const double icon_h = std::max(18.0, mouse_font_size * 1.30);
+                const double icon_w = icon_h * 0.58;
+                const double gap = 8.0;
+                const double total_w = icon_w + gap + text_ext.width;
 
-            const double start_x = (width - total_w) / 2.0;
-            const double icon_y = height - 10.0 - icon_h;
-            const double text_y = icon_y + icon_h * 0.5 + text_ext.height * 0.5 - 1.0;
+                const double start_x = (width - total_w) / 2.0;
+                const double icon_y = height - 10.0 - icon_h;
+                const double text_y = icon_y + icon_h * 0.5 + text_ext.height * 0.5 - 1.0;
 
-            Icons::draw_mouse(
-                cr, start_x, icon_y, icon_w, icon_h, draw_lmb, draw_rmb, draw_mmb, state.config.text_color,
-                state.config.text_color
-            );
+                Icons::draw_mouse(
+                    cr, start_x, icon_y, icon_w, icon_h, draw_lmb, draw_rmb, draw_mmb, state.config.text_color,
+                    state.config.text_color
+                );
 
-            cairo_set_source_rgba(
-                cr, state.config.text_color.r, state.config.text_color.g, state.config.text_color.b,
-                state.config.text_color.a
-            );
-            cairo_move_to(cr, start_x + icon_w + gap, text_y);
-            cairo_show_text(cr, coord_text.c_str());
+                cairo_set_source_rgba(
+                    cr, state.config.text_color.r, state.config.text_color.g, state.config.text_color.b,
+                    state.config.text_color.a
+                );
+                cairo_move_to(cr, start_x + icon_w + gap, text_y);
+                cairo_show_text(cr, coord_text.c_str());
+            } else {
+                const double start_x = (width - text_ext.width) / 2.0;
+                const double text_y = height - 10.0;
+
+                cairo_set_source_rgba(
+                    cr, state.config.text_color.r, state.config.text_color.g, state.config.text_color.b,
+                    state.config.text_color.a
+                );
+                cairo_move_to(cr, start_x, text_y);
+                cairo_show_text(cr, coord_text.c_str());
+            }
         }
 
         cairo_destroy(cr);

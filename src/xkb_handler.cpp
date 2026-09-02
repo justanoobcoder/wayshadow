@@ -175,6 +175,8 @@ namespace wayshadow {
             state.mouse.last_lmb = false;
             state.mouse.last_rmb = false;
             state.mouse.last_mmb = false;
+            state.mouse.last_back = false;
+            state.mouse.last_forward = false;
             state.mouse.has_click = false;
 
             if (keysym == XKB_KEY_BackSpace) {

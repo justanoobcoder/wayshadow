@@ -115,6 +115,10 @@ namespace wayshadow {
                     state_->mouse.rmb = pressed;
                 } else if (button == BTN_MIDDLE) {
                     state_->mouse.mmb = pressed;
+                } else if (button == BTN_SIDE || button == BTN_BACK) {
+                    state_->mouse.back = pressed;
+                } else if (button == BTN_EXTRA || button == BTN_FORWARD) {
+                    state_->mouse.forward = pressed;
                 }
 
                 if (pressed) {
@@ -125,6 +129,9 @@ namespace wayshadow {
                     state_->mouse.last_lmb = (button == BTN_LEFT) || state_->mouse.lmb;
                     state_->mouse.last_rmb = (button == BTN_RIGHT) || state_->mouse.rmb;
                     state_->mouse.last_mmb = (button == BTN_MIDDLE) || state_->mouse.mmb;
+                    state_->mouse.last_back = (button == BTN_SIDE || button == BTN_BACK) || state_->mouse.back;
+                    state_->mouse.last_forward =
+                        (button == BTN_EXTRA || button == BTN_FORWARD) || state_->mouse.forward;
 
                     std::string btn_str;
                     if (state_->mouse.last_lmb)
@@ -133,15 +140,10 @@ namespace wayshadow {
                         btn_str += "RMB ";
                     if (state_->mouse.last_mmb)
                         btn_str += "MMB ";
-                    if (btn_str.empty()) {
-                        if (button == BTN_SIDE || button == BTN_BACK) {
-                            btn_str = "Back ";
-                        } else if (button == BTN_EXTRA || button == BTN_FORWARD) {
-                            btn_str = "Forward ";
-                        } else {
-                            btn_str = "Mouse ";
-                        }
-                    }
+                    if (state_->mouse.last_back)
+                        btn_str += "Back ";
+                    if (state_->mouse.last_forward)
+                        btn_str += "Forward ";
                     state_->mouse.last_button = btn_str;
                 }
 

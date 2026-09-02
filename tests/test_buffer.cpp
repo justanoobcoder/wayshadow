@@ -87,9 +87,13 @@ void test_mouse_state() {
     assert(!state.mouse.lmb);
     assert(!state.mouse.rmb);
     assert(!state.mouse.mmb);
+    assert(!state.mouse.back);
+    assert(!state.mouse.forward);
     assert(!state.mouse.last_lmb);
     assert(!state.mouse.last_rmb);
     assert(!state.mouse.last_mmb);
+    assert(!state.mouse.last_back);
+    assert(!state.mouse.last_forward);
     assert(!state.mouse.has_click);
 
     state.mouse.lmb = true;
@@ -107,9 +111,22 @@ void test_mouse_state() {
     assert(state.mouse.last_lmb);
     assert(state.mouse.has_click);
 
+    // Side buttons (Back / Forward)
+    state.mouse.back = true;
+    state.mouse.last_back = true;
+    assert(state.mouse.back);
+    assert(state.mouse.last_back);
+
+    state.mouse.forward = true;
+    state.mouse.last_forward = true;
+    assert(state.mouse.forward);
+    assert(state.mouse.last_forward);
+
     // Clearing on hide / new key
     state.mouse.last_button.clear();
     state.mouse.last_lmb = false;
+    state.mouse.last_back = false;
+    state.mouse.last_forward = false;
     state.mouse.has_click = false;
     assert(state.mouse.last_button.empty());
     assert(!state.mouse.has_click);

@@ -12,9 +12,13 @@ namespace wayshadow {
         bool lmb{false};
         bool rmb{false};
         bool mmb{false};
+        bool back{false};
+        bool forward{false};
         bool last_lmb{false};
         bool last_rmb{false};
         bool last_mmb{false};
+        bool last_back{false};
+        bool last_forward{false};
         bool has_click{false};
         int x{0};
         int y{0};

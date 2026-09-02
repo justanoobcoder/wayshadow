@@ -314,8 +314,16 @@ namespace wayshadow {
     }
 
     void Icons::draw_mouse(
-        cairo_t* cr, double x, double y, double width, double height, bool lmb, bool rmb, bool mmb,
-        const Color& stroke_color, const Color& fill_color
+        cairo_t* cr,
+        double x,
+        double y,
+        double width,
+        double height,
+        bool lmb,
+        bool rmb,
+        bool mmb,
+        const Color& stroke_color,
+        const Color& fill_color
     ) noexcept {
         cairo_save(cr);
 

@@ -117,9 +117,13 @@ namespace wayshadow {
         state.mouse.lmb = false;
         state.mouse.rmb = false;
         state.mouse.mmb = false;
+        state.mouse.back = false;
+        state.mouse.forward = false;
         state.mouse.last_lmb = false;
         state.mouse.last_rmb = false;
         state.mouse.last_mmb = false;
+        state.mouse.last_back = false;
+        state.mouse.last_forward = false;
         state.mouse.has_click = false;
 
         if (surface_) {
