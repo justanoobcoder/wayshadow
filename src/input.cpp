@@ -144,6 +144,11 @@ namespace wayshadow {
                         btn_str += "Back ";
                     if (state_->mouse.last_forward)
                         btn_str += "Forward ";
+
+                    if (btn_str.empty()) {
+                        btn_str = "BTN_" + std::to_string(button) + " ";
+                    }
+
                     state_->mouse.last_button = btn_str;
                 }
 

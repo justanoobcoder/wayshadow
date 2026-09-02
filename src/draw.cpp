@@ -237,21 +237,13 @@ namespace wayshadow {
             const bool draw_lmb = state.mouse.lmb || (state.mouse.has_click && state.mouse.last_lmb);
             const bool draw_rmb = state.mouse.rmb || (state.mouse.has_click && state.mouse.last_rmb);
             const bool draw_mmb = state.mouse.mmb || (state.mouse.has_click && state.mouse.last_mmb);
-            const bool draw_back = state.mouse.back || (state.mouse.has_click && state.mouse.last_back);
-            const bool draw_forward = state.mouse.forward || (state.mouse.has_click && state.mouse.last_forward);
 
             const bool show_mouse_icon = draw_lmb || draw_rmb || draw_mmb;
-            std::string side_text;
-            if (draw_back)
-                side_text += "Back ";
-            if (draw_forward)
-                side_text += "Forward ";
-
+            std::string display_text = state.mouse.last_button;
             // Remove trailing space if there's text
-            if (!side_text.empty() && side_text.back() == ' ') {
-                side_text.pop_back();
+            if (!display_text.empty() && display_text.back() == ' ') {
+                display_text.pop_back();
             }
-            const std::string display_text = side_text;
 
             cairo_select_font_face(cr, "Monospace", CAIRO_FONT_SLANT_NORMAL, CAIRO_FONT_WEIGHT_NORMAL);
             const double mouse_font_size = state.config.font_size * 0.40;
