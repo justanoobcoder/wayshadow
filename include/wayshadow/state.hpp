@@ -20,8 +20,6 @@ namespace wayshadow {
         bool last_back{false};
         bool last_forward{false};
         bool has_click{false};
-        int x{0};
-        int y{0};
         struct timespec last_click_time{0, 0};
         std::string last_button{};
     };

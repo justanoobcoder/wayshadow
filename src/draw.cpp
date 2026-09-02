@@ -247,15 +247,18 @@ namespace wayshadow {
             if (draw_forward)
                 side_text += "Forward ";
 
-            const std::string coord_text =
-                side_text + "(" + std::to_string(state.mouse.x) + ", " + std::to_string(state.mouse.y) + ")";
+            // Remove trailing space if there's text
+            if (!side_text.empty() && side_text.back() == ' ') {
+                side_text.pop_back();
+            }
+            const std::string display_text = side_text;
 
             cairo_select_font_face(cr, "Monospace", CAIRO_FONT_SLANT_NORMAL, CAIRO_FONT_WEIGHT_NORMAL);
             const double mouse_font_size = state.config.font_size * 0.40;
             cairo_set_font_size(cr, mouse_font_size);
 
             cairo_text_extents_t text_ext;
-            cairo_text_extents(cr, coord_text.c_str(), &text_ext);
+            cairo_text_extents(cr, display_text.c_str(), &text_ext);
 
             if (show_mouse_icon) {
                 const double icon_h = std::max(18.0, mouse_font_size * 1.30);
@@ -277,7 +280,7 @@ namespace wayshadow {
                     state.config.text_color.a
                 );
                 cairo_move_to(cr, start_x + icon_w + gap, text_y);
-                cairo_show_text(cr, coord_text.c_str());
+                cairo_show_text(cr, display_text.c_str());
             } else {
                 const double start_x = (width - text_ext.width) / 2.0;
                 const double text_y = height - 10.0;
@@ -287,7 +290,7 @@ namespace wayshadow {
                     state.config.text_color.a
                 );
                 cairo_move_to(cr, start_x, text_y);
-                cairo_show_text(cr, coord_text.c_str());
+                cairo_show_text(cr, display_text.c_str());
             }
         }
 

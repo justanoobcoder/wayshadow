@@ -150,20 +150,6 @@ namespace wayshadow {
                 if (button_callback_) {
                     button_callback_(button, button_state);
                 }
-            } else if (type == LIBINPUT_EVENT_POINTER_MOTION) {
-                auto* p = libinput_event_get_pointer_event(event);
-                const double dx = libinput_event_pointer_get_dx(p);
-                const double dy = libinput_event_pointer_get_dy(p);
-
-                state_->mouse.x += static_cast<int>(dx);
-                state_->mouse.y += static_cast<int>(dy);
-
-                state_->mouse.x = std::clamp(state_->mouse.x, 0, 3840);
-                state_->mouse.y = std::clamp(state_->mouse.y, 0, 2160);
-
-                if (motion_callback_) {
-                    motion_callback_(dx, dy);
-                }
             }
 
             libinput_event_destroy(event);

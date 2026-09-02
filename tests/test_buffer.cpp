@@ -100,8 +100,6 @@ void test_mouse_state() {
     state.mouse.last_lmb = true;
     state.mouse.has_click = true;
     state.mouse.last_button = "LMB ";
-    state.mouse.x = 100;
-    state.mouse.y = 200;
     assert(state.mouse.last_button == "LMB ");
     assert(state.mouse.last_lmb);
     assert(state.mouse.has_click);
