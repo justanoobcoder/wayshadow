@@ -4,6 +4,7 @@
 #include "wayshadow/config.hpp"
 
 #include <ctime>
+#include <string>
 
 namespace wayshadow {
 
@@ -14,6 +15,7 @@ namespace wayshadow {
         int x{0};
         int y{0};
         struct timespec last_click_time{0, 0};
+        std::string last_button{};
     };
 
     struct ModifiersState {

@@ -113,6 +113,10 @@ namespace wayshadow {
             return;
         state.window_visible = false;
         state.buffer.clear();
+        state.mouse.last_button.clear();
+        state.mouse.lmb = false;
+        state.mouse.rmb = false;
+        state.mouse.mmb = false;
 
         if (surface_) {
             wl_surface_attach(surface_, nullptr, 0, 0);

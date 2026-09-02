@@ -227,15 +227,18 @@ namespace wayshadow {
         }
 
         // Render mouse indicator bar
-        if (state.mouse.lmb || state.mouse.rmb || state.mouse.mmb) {
-            std::string mouse_info;
-            if (state.mouse.lmb)
-                mouse_info += "LMB ";
-            if (state.mouse.rmb)
-                mouse_info += "RMB ";
-            if (state.mouse.mmb)
-                mouse_info += "MMB ";
-            mouse_info += "(" + std::to_string(state.mouse.x) + ", " + std::to_string(state.mouse.y) + ")";
+        std::string active_buttons;
+        if (state.mouse.lmb)
+            active_buttons += "LMB ";
+        if (state.mouse.rmb)
+            active_buttons += "RMB ";
+        if (state.mouse.mmb)
+            active_buttons += "MMB ";
+
+        const std::string& display_button = !active_buttons.empty() ? active_buttons : state.mouse.last_button;
+        if (!display_button.empty()) {
+            const std::string mouse_info =
+                display_button + "(" + std::to_string(state.mouse.x) + ", " + std::to_string(state.mouse.y) + ")";
 
             cairo_set_source_rgba(
                 cr, state.config.text_color.r, state.config.text_color.g, state.config.text_color.b,

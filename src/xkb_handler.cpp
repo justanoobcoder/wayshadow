@@ -171,6 +171,7 @@ namespace wayshadow {
 
         if (state.overlay_enabled) {
             clock_gettime(CLOCK_MONOTONIC, &state.last_key_time);
+            state.mouse.last_button.clear();
 
             if (keysym == XKB_KEY_BackSpace) {
                 if (state.modifiers.ctrl) {

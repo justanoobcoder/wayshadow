@@ -153,6 +153,29 @@ namespace wayshadow {
                     state_.needs_redraw = false;
                 }
             },
+            [this](uint32_t /*button*/, uint32_t button_state) {
+                if (button_state == 1) {
+                    if (!state_.window_visible && state_.overlay_enabled) {
+                        if (win_mgr_) {
+                            win_mgr_->show_window(state_);
+                        }
+                    }
+                    state_.needs_redraw = true;
+                }
+
+                if (state_.needs_redraw && win_mgr_) {
+                    win_mgr_->redraw(state_);
+                    state_.needs_redraw = false;
+                }
+            },
+            [this](double /*dx*/, double /*dy*/) {
+                if ((state_.mouse.lmb || state_.mouse.rmb || state_.mouse.mmb) && state_.window_visible) {
+                    clock_gettime(CLOCK_MONOTONIC, &state_.last_key_time);
+                    if (win_mgr_) {
+                        win_mgr_->redraw(state_);
+                    }
+                }
+            },
             state_
         );
 

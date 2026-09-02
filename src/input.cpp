@@ -28,8 +28,12 @@ namespace wayshadow {
 
     } // namespace
 
-    InputManager::InputManager(KeyCallback callback, ClientState& state)
-        : callback_(std::move(callback)), state_(&state) {
+    InputManager::InputManager(
+        KeyCallback key_callback, MouseButtonCallback button_callback, MouseMotionCallback motion_callback,
+        ClientState& state
+    )
+        : key_callback_(std::move(key_callback)), button_callback_(std::move(button_callback)),
+          motion_callback_(std::move(motion_callback)), state_(&state) {
         udev_ = udev_new();
         if (!udev_) {
             std::fprintf(stderr, "Failed to initialize udev\n");
@@ -47,6 +51,9 @@ namespace wayshadow {
         libinput_udev_assign_seat(li_, "seat0");
     }
 
+    InputManager::InputManager(KeyCallback callback, ClientState& state)
+        : InputManager(std::move(callback), nullptr, nullptr, state) {}
+
     InputManager::~InputManager() {
         if (li_)
             libinput_unref(li_);
@@ -56,7 +63,8 @@ namespace wayshadow {
 
     InputManager::InputManager(InputManager&& other) noexcept
         : li_(std::exchange(other.li_, nullptr)), udev_(std::exchange(other.udev_, nullptr)),
-          callback_(std::move(other.callback_)), state_(std::exchange(other.state_, nullptr)) {}
+          key_callback_(std::move(other.key_callback_)), button_callback_(std::move(other.button_callback_)),
+          motion_callback_(std::move(other.motion_callback_)), state_(std::exchange(other.state_, nullptr)) {}
 
     InputManager& InputManager::operator=(InputManager&& other) noexcept {
         if (this != &other) {
@@ -67,7 +75,9 @@ namespace wayshadow {
 
             li_ = std::exchange(other.li_, nullptr);
             udev_ = std::exchange(other.udev_, nullptr);
-            callback_ = std::move(other.callback_);
+            key_callback_ = std::move(other.key_callback_);
+            button_callback_ = std::move(other.button_callback_);
+            motion_callback_ = std::move(other.motion_callback_);
             state_ = std::exchange(other.state_, nullptr);
         }
         return *this;
@@ -90,8 +100,8 @@ namespace wayshadow {
                 const uint32_t key = libinput_event_keyboard_get_key(k);
                 const uint32_t key_state = libinput_event_keyboard_get_key_state(k);
 
-                if (callback_) {
-                    callback_(key, key_state);
+                if (key_callback_) {
+                    key_callback_(key, key_state);
                 }
             } else if (type == LIBINPUT_EVENT_POINTER_BUTTON) {
                 auto* p = libinput_event_get_pointer_event(event);
@@ -109,8 +119,29 @@ namespace wayshadow {
 
                 if (pressed) {
                     clock_gettime(CLOCK_MONOTONIC, &state_->mouse.last_click_time);
-                    state_->needs_redraw = true;
-                    state_->window_visible = true;
+                    clock_gettime(CLOCK_MONOTONIC, &state_->last_key_time);
+
+                    std::string btn_str;
+                    if (state_->mouse.lmb)
+                        btn_str += "LMB ";
+                    if (state_->mouse.rmb)
+                        btn_str += "RMB ";
+                    if (state_->mouse.mmb)
+                        btn_str += "MMB ";
+                    if (btn_str.empty()) {
+                        if (button == BTN_SIDE || button == BTN_BACK) {
+                            btn_str = "Back ";
+                        } else if (button == BTN_EXTRA || button == BTN_FORWARD) {
+                            btn_str = "Forward ";
+                        } else {
+                            btn_str = "Mouse ";
+                        }
+                    }
+                    state_->mouse.last_button = btn_str;
+                }
+
+                if (button_callback_) {
+                    button_callback_(button, button_state);
                 }
             } else if (type == LIBINPUT_EVENT_POINTER_MOTION) {
                 auto* p = libinput_event_get_pointer_event(event);
@@ -122,6 +153,10 @@ namespace wayshadow {
 
                 state_->mouse.x = std::clamp(state_->mouse.x, 0, 3840);
                 state_->mouse.y = std::clamp(state_->mouse.y, 0, 2160);
+
+                if (motion_callback_) {
+                    motion_callback_(dx, dy);
+                }
             }
 
             libinput_event_destroy(event);
