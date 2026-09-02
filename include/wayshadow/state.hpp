@@ -12,6 +12,10 @@ namespace wayshadow {
         bool lmb{false};
         bool rmb{false};
         bool mmb{false};
+        bool last_lmb{false};
+        bool last_rmb{false};
+        bool last_mmb{false};
+        bool has_click{false};
         int x{0};
         int y{0};
         struct timespec last_click_time{0, 0};

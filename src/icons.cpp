@@ -1,5 +1,6 @@
 #include "wayshadow/icons.hpp"
 
+#include <algorithm>
 #include <cmath>
 #include <cstdlib>
 #include <numbers>
@@ -308,6 +309,119 @@ namespace wayshadow {
             cairo_line_to(cr, cx + size * 0.05, cy + size * 0.15);
             cairo_stroke(cr);
         }
+
+        cairo_restore(cr);
+    }
+
+    void Icons::draw_mouse(
+        cairo_t* cr, double x, double y, double width, double height, bool lmb, bool rmb, bool mmb,
+        const Color& stroke_color, const Color& fill_color
+    ) noexcept {
+        cairo_save(cr);
+
+        const double w = width;
+        const double h = height;
+        const double r = w / 2.0;
+        const double cx = x + r;
+        const double y_mid = y + h * 0.48;
+
+        // Scroll wheel geometry
+        const double ww = w * 0.28;
+        const double hw = h * 0.28;
+        const double rw = ww / 2.0;
+        const double y_wt = y + h * 0.12;
+        const double y_wb = y_wt + hw;
+        const double x_wl = cx - rw;
+        const double x_wr = cx + rw;
+
+        const double line_width = std::max(1.5, w * 0.09);
+
+        // 1. Draw button fills if pressed/active
+        cairo_set_source_rgba(cr, fill_color.r, fill_color.g, fill_color.b, fill_color.a);
+
+        // LMB fill (top-left compartment)
+        if (lmb) {
+            cairo_new_path(cr);
+            cairo_move_to(cr, cx, y_mid);
+            cairo_line_to(cr, x, y_mid);
+            cairo_line_to(cr, x, y + r);
+            cairo_arc(cr, cx, y + r, r, std::numbers::pi, -std::numbers::pi / 2.0);
+            cairo_line_to(cr, cx, y_wt);
+            cairo_arc_negative(cr, cx, y_wt + rw, rw, -std::numbers::pi / 2.0, -std::numbers::pi);
+            cairo_line_to(cr, x_wl, y_wb - rw);
+            cairo_arc_negative(cr, cx, y_wb - rw, rw, std::numbers::pi, std::numbers::pi / 2.0);
+            cairo_line_to(cr, cx, y_mid);
+            cairo_close_path(cr);
+            cairo_fill(cr);
+        }
+
+        // RMB fill (top-right compartment)
+        if (rmb) {
+            cairo_new_path(cr);
+            cairo_move_to(cr, cx, y_mid);
+            cairo_line_to(cr, x + w, y_mid);
+            cairo_line_to(cr, x + w, y + r);
+            cairo_arc_negative(cr, cx, y + r, r, 0.0, -std::numbers::pi / 2.0);
+            cairo_line_to(cr, cx, y_wt);
+            cairo_arc(cr, cx, y_wt + rw, rw, -std::numbers::pi / 2.0, 0.0);
+            cairo_line_to(cr, x_wr, y_wb - rw);
+            cairo_arc(cr, cx, y_wb - rw, rw, 0.0, std::numbers::pi / 2.0);
+            cairo_line_to(cr, cx, y_mid);
+            cairo_close_path(cr);
+            cairo_fill(cr);
+        }
+
+        // MMB fill (scroll wheel)
+        if (mmb) {
+            cairo_new_path(cr);
+            cairo_arc(cr, cx, y_wt + rw, rw, std::numbers::pi, 0.0);
+            cairo_line_to(cr, x_wr, y_wb - rw);
+            cairo_arc(cr, cx, y_wb - rw, rw, 0.0, std::numbers::pi);
+            cairo_line_to(cr, x_wl, y_wt + rw);
+            cairo_close_path(cr);
+            cairo_fill(cr);
+        }
+
+        // 2. Stroke outlines
+        cairo_set_source_rgba(cr, stroke_color.r, stroke_color.g, stroke_color.b, stroke_color.a);
+        cairo_set_line_width(cr, line_width);
+        cairo_set_line_cap(cr, CAIRO_LINE_CAP_ROUND);
+        cairo_set_line_join(cr, CAIRO_LINE_JOIN_ROUND);
+
+        // Outer capsule outline
+        cairo_new_path(cr);
+        cairo_arc(cr, cx, y + r, r, std::numbers::pi, 0.0);
+        cairo_line_to(cr, x + w, y + h - r);
+        cairo_arc(cr, cx, y + h - r, r, 0.0, std::numbers::pi);
+        cairo_line_to(cr, x, y + r);
+        cairo_close_path(cr);
+        cairo_stroke(cr);
+
+        // Horizontal divider line
+        cairo_move_to(cr, x, y_mid);
+        cairo_line_to(cr, x + w, y_mid);
+        cairo_stroke(cr);
+
+        // Scroll wheel outline
+        cairo_new_path(cr);
+        cairo_arc(cr, cx, y_wt + rw, rw, std::numbers::pi, 0.0);
+        cairo_line_to(cr, x_wr, y_wb - rw);
+        cairo_arc(cr, cx, y_wb - rw, rw, 0.0, std::numbers::pi);
+        cairo_line_to(cr, x_wl, y_wt + rw);
+        cairo_close_path(cr);
+        cairo_stroke(cr);
+
+        // Vertical divider below scroll wheel
+        cairo_move_to(cr, cx, y_wb);
+        cairo_line_to(cr, cx, y_mid);
+        cairo_stroke(cr);
+
+        // Top stem (cord plug)
+        const double stem_h = std::max(2.0, h * 0.08);
+        cairo_set_line_width(cr, line_width * 1.3);
+        cairo_move_to(cr, cx, y);
+        cairo_line_to(cr, cx, y - stem_h);
+        cairo_stroke(cr);
 
         cairo_restore(cr);
     }

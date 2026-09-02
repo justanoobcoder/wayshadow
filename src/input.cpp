@@ -121,12 +121,17 @@ namespace wayshadow {
                     clock_gettime(CLOCK_MONOTONIC, &state_->mouse.last_click_time);
                     clock_gettime(CLOCK_MONOTONIC, &state_->last_key_time);
 
+                    state_->mouse.has_click = true;
+                    state_->mouse.last_lmb = (button == BTN_LEFT) || state_->mouse.lmb;
+                    state_->mouse.last_rmb = (button == BTN_RIGHT) || state_->mouse.rmb;
+                    state_->mouse.last_mmb = (button == BTN_MIDDLE) || state_->mouse.mmb;
+
                     std::string btn_str;
-                    if (state_->mouse.lmb)
+                    if (state_->mouse.last_lmb)
                         btn_str += "LMB ";
-                    if (state_->mouse.rmb)
+                    if (state_->mouse.last_rmb)
                         btn_str += "RMB ";
-                    if (state_->mouse.mmb)
+                    if (state_->mouse.last_mmb)
                         btn_str += "MMB ";
                     if (btn_str.empty()) {
                         if (button == BTN_SIDE || button == BTN_BACK) {

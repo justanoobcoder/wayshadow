@@ -227,33 +227,42 @@ namespace wayshadow {
         }
 
         // Render mouse indicator bar
-        std::string active_buttons;
-        if (state.mouse.lmb)
-            active_buttons += "LMB ";
-        if (state.mouse.rmb)
-            active_buttons += "RMB ";
-        if (state.mouse.mmb)
-            active_buttons += "MMB ";
+        const bool is_mouse_active = state.mouse.lmb || state.mouse.rmb || state.mouse.mmb || state.mouse.has_click;
+        if (is_mouse_active) {
+            const bool draw_lmb = state.mouse.lmb || (state.mouse.has_click && state.mouse.last_lmb);
+            const bool draw_rmb = state.mouse.rmb || (state.mouse.has_click && state.mouse.last_rmb);
+            const bool draw_mmb = state.mouse.mmb || (state.mouse.has_click && state.mouse.last_mmb);
 
-        const std::string& display_button = !active_buttons.empty() ? active_buttons : state.mouse.last_button;
-        if (!display_button.empty()) {
-            const std::string mouse_info =
-                display_button + "(" + std::to_string(state.mouse.x) + ", " + std::to_string(state.mouse.y) + ")";
+            const std::string coord_text =
+                "(" + std::to_string(state.mouse.x) + ", " + std::to_string(state.mouse.y) + ")";
+
+            cairo_select_font_face(cr, "Monospace", CAIRO_FONT_SLANT_NORMAL, CAIRO_FONT_WEIGHT_NORMAL);
+            const double mouse_font_size = state.config.font_size * 0.40;
+            cairo_set_font_size(cr, mouse_font_size);
+
+            cairo_text_extents_t text_ext;
+            cairo_text_extents(cr, coord_text.c_str(), &text_ext);
+
+            const double icon_h = std::max(18.0, mouse_font_size * 1.30);
+            const double icon_w = icon_h * 0.58;
+            const double gap = 8.0;
+            const double total_w = icon_w + gap + text_ext.width;
+
+            const double start_x = (width - total_w) / 2.0;
+            const double icon_y = height - 10.0 - icon_h;
+            const double text_y = icon_y + icon_h * 0.5 + text_ext.height * 0.5 - 1.0;
+
+            Icons::draw_mouse(
+                cr, start_x, icon_y, icon_w, icon_h, draw_lmb, draw_rmb, draw_mmb, state.config.text_color,
+                state.config.text_color
+            );
 
             cairo_set_source_rgba(
                 cr, state.config.text_color.r, state.config.text_color.g, state.config.text_color.b,
                 state.config.text_color.a
             );
-            cairo_select_font_face(cr, "Monospace", CAIRO_FONT_SLANT_NORMAL, CAIRO_FONT_WEIGHT_NORMAL);
-            cairo_set_font_size(cr, state.config.font_size * 0.5);
-
-            cairo_text_extents_t mouse_ext;
-            cairo_text_extents(cr, mouse_info.c_str(), &mouse_ext);
-            const double mouse_x = (width - mouse_ext.width) / 2.0;
-            const double mouse_y = height - 10.0;
-
-            cairo_move_to(cr, mouse_x, mouse_y);
-            cairo_show_text(cr, mouse_info.c_str());
+            cairo_move_to(cr, start_x + icon_w + gap, text_y);
+            cairo_show_text(cr, coord_text.c_str());
         }
 
         cairo_destroy(cr);

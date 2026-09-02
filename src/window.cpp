@@ -117,6 +117,10 @@ namespace wayshadow {
         state.mouse.lmb = false;
         state.mouse.rmb = false;
         state.mouse.mmb = false;
+        state.mouse.last_lmb = false;
+        state.mouse.last_rmb = false;
+        state.mouse.last_mmb = false;
+        state.mouse.has_click = false;
 
         if (surface_) {
             wl_surface_attach(surface_, nullptr, 0, 0);

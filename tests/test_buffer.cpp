@@ -87,20 +87,32 @@ void test_mouse_state() {
     assert(!state.mouse.lmb);
     assert(!state.mouse.rmb);
     assert(!state.mouse.mmb);
+    assert(!state.mouse.last_lmb);
+    assert(!state.mouse.last_rmb);
+    assert(!state.mouse.last_mmb);
+    assert(!state.mouse.has_click);
 
     state.mouse.lmb = true;
+    state.mouse.last_lmb = true;
+    state.mouse.has_click = true;
     state.mouse.last_button = "LMB ";
     state.mouse.x = 100;
     state.mouse.y = 200;
     assert(state.mouse.last_button == "LMB ");
+    assert(state.mouse.last_lmb);
+    assert(state.mouse.has_click);
 
-    // Resetting mouse button on release keeps last_button for display
+    // Resetting mouse button on release keeps last_lmb and has_click for display
     state.mouse.lmb = false;
-    assert(state.mouse.last_button == "LMB ");
+    assert(state.mouse.last_lmb);
+    assert(state.mouse.has_click);
 
     // Clearing on hide / new key
     state.mouse.last_button.clear();
+    state.mouse.last_lmb = false;
+    state.mouse.has_click = false;
     assert(state.mouse.last_button.empty());
+    assert(!state.mouse.has_click);
 
     std::cout << "[TEST] test_mouse_state PASSED.\n";
 }
