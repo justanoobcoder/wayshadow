@@ -83,10 +83,14 @@ install: $(TARGET)
 	install -D -m 755 $(TARGET)         $(DESTDIR)$(BINDIR)/$(TARGET)
 	install -D -m 644 man/wayshadow.1      $(DESTDIR)$(MANDIR)/man1/wayshadow.1
 	install -D -m 644 man/wayshadow.conf.5 $(DESTDIR)$(MANDIR)/man5/wayshadow.conf.5
+	install -D -m 644 public/way_shadow.svg $(DESTDIR)$(PREFIX)/share/wayshadow/way_shadow.svg
+	install -D -m 644 public/way_shadow.svg $(DESTDIR)$(PREFIX)/share/icons/hicolor/scalable/apps/way_shadow.svg
 
 uninstall:
 	rm -f $(DESTDIR)$(BINDIR)/$(TARGET)
 	rm -f $(DESTDIR)$(MANDIR)/man1/wayshadow.1
 	rm -f $(DESTDIR)$(MANDIR)/man5/wayshadow.conf.5
+	rm -f $(DESTDIR)$(PREFIX)/share/wayshadow/way_shadow.svg
+	rm -f $(DESTDIR)$(PREFIX)/share/icons/hicolor/scalable/apps/way_shadow.svg
 
 .PHONY: all clean install uninstall test

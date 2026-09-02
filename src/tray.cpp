@@ -51,19 +51,58 @@ namespace wayshadow {
         indicator_ = app_indicator_new("wayshadow-tray", "input-keyboard", APP_INDICATOR_CATEGORY_APPLICATION_STATUS);
         app_indicator_set_status(indicator_, APP_INDICATOR_STATUS_ACTIVE);
 
-        char cwd[1024];
-        if (getcwd(cwd, sizeof(cwd))) {
-            const auto public_dir = std::filesystem::path(cwd) / "public";
-            if (std::filesystem::exists(public_dir)) {
-                app_indicator_set_icon_theme_path(indicator_, public_dir.c_str());
-                app_indicator_set_icon(indicator_, "key_pop");
-            } else {
-                const auto parent_public = std::filesystem::path(cwd).parent_path() / "public";
-                if (std::filesystem::exists(parent_public)) {
-                    app_indicator_set_icon_theme_path(indicator_, parent_public.c_str());
-                    app_indicator_set_icon(indicator_, "key_pop");
+        std::string icon_path;
+
+        char exe_buf[1024];
+        const ssize_t exe_len = readlink("/proc/self/exe", exe_buf, sizeof(exe_buf) - 1);
+        if (exe_len > 0) {
+            exe_buf[exe_len] = '\0';
+            const auto exe_dir = std::filesystem::path(exe_buf).parent_path();
+            for (const auto& candidate : {
+                     exe_dir / "public" / "way_shadow.svg",
+                     exe_dir.parent_path() / "public" / "way_shadow.svg",
+                     exe_dir.parent_path() / "share" / "wayshadow" / "way_shadow.svg",
+                     exe_dir.parent_path() / "share" / "icons" / "hicolor" / "scalable" / "apps" / "way_shadow.svg",
+                 }) {
+                if (std::filesystem::exists(candidate)) {
+                    icon_path = candidate.string();
+                    break;
                 }
             }
+        }
+
+        if (icon_path.empty()) {
+            char cwd[1024];
+            if (getcwd(cwd, sizeof(cwd))) {
+                for (const auto& candidate : {
+                         std::filesystem::path(cwd) / "public" / "way_shadow.svg",
+                         std::filesystem::path(cwd).parent_path() / "public" / "way_shadow.svg",
+                     }) {
+                    if (std::filesystem::exists(candidate)) {
+                        icon_path = candidate.string();
+                        break;
+                    }
+                }
+            }
+        }
+
+        if (icon_path.empty()) {
+            for (const auto& candidate : {
+                     "/usr/share/wayshadow/way_shadow.svg",
+                     "/usr/local/share/wayshadow/way_shadow.svg",
+                     "/usr/share/icons/hicolor/scalable/apps/way_shadow.svg",
+                 }) {
+                if (std::filesystem::exists(candidate)) {
+                    icon_path = candidate;
+                    break;
+                }
+            }
+        }
+
+        if (!icon_path.empty()) {
+            app_indicator_set_icon_full(indicator_, icon_path.c_str(), "wayshadow");
+        } else {
+            app_indicator_set_icon(indicator_, "input-keyboard");
         }
 
         menu_ = gtk_menu_new();

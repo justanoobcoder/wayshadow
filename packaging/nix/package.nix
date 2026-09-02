@@ -48,6 +48,8 @@ stdenv.mkDerivation {
     install -D -m 755 wayshadow        $out/bin/wayshadow
     install -D -m 644 man/wayshadow.1  $out/share/man/man1/wayshadow.1
     install -D -m 644 man/wayshadow.conf.5 $out/share/man/man5/wayshadow.conf.5
+    install -D -m 644 public/way_shadow.svg $out/share/wayshadow/way_shadow.svg
+    install -D -m 644 public/way_shadow.svg $out/share/icons/hicolor/scalable/apps/way_shadow.svg
 
     runHook postInstall
   '';
