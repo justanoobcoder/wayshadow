@@ -15,3 +15,6 @@ include/wayshadow/version.hpp
 .cache/
 build/
 bin/
+
+# Others
+compile_commands.json
