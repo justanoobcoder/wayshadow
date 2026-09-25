@@ -1,16 +1,41 @@
-BasedOnStyle: LLVM
-IndentWidth: 4
-ColumnLimit: 120
+BasedOnStyle: Google
+
+Language: Cpp
+Standard: c++20
+
+DerivePointerAlignment: false
 PointerAlignment: Left
-NamespaceIndentation: All
-AlignAfterOpenBracket: BlockIndent
-AlignOperands: DontAlign
-BreakBeforeBinaryOperators: NonAssignment
-BreakBinaryOperations: RespectPrecedence
-SortIncludes: CaseSensitive
+
+ColumnLimit: 80
+IndentWidth: 2
+ContinuationIndentWidth: 2
+BreakBeforeBraces: Attach
+
 IncludeBlocks: Regroup
+IncludeIsMainRegex: '([_a-zA-Z0-9]+(_test|_impl)?)|$'
+
 IncludeCategories:
-  - Regex: '^".*"'
+  - Regex: '^<.*\.h>'
     Priority: 1
-  - Regex: '^<.*>'
+    SortPriority: 1
+  - Regex: '^<[^.]*>'
     Priority: 2
+    SortPriority: 2
+  - Regex: '^<.*/.*>'
+    Priority: 3
+    SortPriority: 3
+  - Regex: '^".*"'
+    Priority: 4
+    SortPriority: 4
+  - Regex: '.*'
+    Priority: 5
+    SortPriority: 5
+
+RawStringFormats:
+  - Language: TextProto
+    Delimiters:
+      - 'pb'
+      - 'proto'
+    BasedOnStyle: Google
+
+CommentPragmas: '(@copydoc|@copybrief|@see|@overload|@snippet)'
