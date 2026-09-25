@@ -1,7 +1,7 @@
 CXX = g++
 CC = gcc
 
-CXXFLAGS = -std=c++20 -Wall -Weffc++ -Wextra -Wconversion -Wsign-conversion -Wshadow -Werror -D_POSIX_C_SOURCE=200809L
+CXXFLAGS = -std=c++20 -Wall -Wextra -Wconversion -Wsign-conversion -Wshadow -Werror -D_POSIX_C_SOURCE=200809L
 CFLAGS   = -std=c11 -Wall -Wextra -D_POSIX_C_SOURCE=200809L
 
 VERSION    := $(shell cat VERSION 2>/dev/null || echo "1.0.0")
@@ -57,13 +57,15 @@ xdg-shell-client-protocol.h:
 include/wayshadow/version.hpp: VERSION
 	@mkdir -p include/wayshadow
 	@echo "/* auto-generated, do not edit */"       > $@
-	@echo "#pragma once"                            >> $@
+	@echo "#ifndef WAYSHADOW_VERSION_HPP"           >> $@
+	@echo "#define WAYSHADOW_VERSION_HPP"           >> $@
 	@echo "#include <string_view>"                  >> $@
-	@echo "namespace wayshadow {"                      >> $@
-	@echo "inline constexpr std::string_view APP_VERSION = \"$(VERSION)\";"    >> $@
-	@echo "inline constexpr std::string_view GIT_COMMIT  = \"$(GIT_COMMIT)\";" >> $@
-	@echo "inline constexpr std::string_view BUILD_DATE  = \"$(BUILD_DATE)\";" >> $@
+	@echo "namespace wayshadow {"                   >> $@
+	@echo "inline constexpr std::string_view kAppVersion = \"$(VERSION)\";"    >> $@
+	@echo "inline constexpr std::string_view kGitCommit  = \"$(GIT_COMMIT)\";" >> $@
+	@echo "inline constexpr std::string_view kBuildDate  = \"$(BUILD_DATE)\";" >> $@
 	@echo "}"                                       >> $@
+	@echo "#endif"                                  >> $@
 
 TEST_SRCS = $(SRCS) tests/test_color.cpp tests/test_config.cpp tests/test_buffer.cpp tests/test_main.cpp
 TEST_OBJS = $(TEST_SRCS:.cpp=.o) xdg-shell-protocol.o
