@@ -8,60 +8,60 @@ extern void TestBufferOperations() {
   std::cout << "[TEST] Running test_buffer_operations...\n";
 
   wayshadow::TextBuffer buf{};
-  assert(buf.empty());
-  assert(buf.segment_count() == 0);
+  assert(buf.Empty());
+  assert(buf.SegmentCount() == 0);
 
   // Appending key segments
-  buf.append_or_increment("a");
-  assert(buf.segment_count() == 1);
-  assert(buf.full_text() == "a");
+  buf.AppendOrIncrement("a");
+  assert(buf.SegmentCount() == 1);
+  assert(buf.FullText() == "a");
 
   // Repeating same key (compacts to 'a×2')
-  buf.append_or_increment("a");
-  assert(buf.segment_count() == 1);
-  assert(buf.full_text() ==
+  buf.AppendOrIncrement("a");
+  assert(buf.SegmentCount() == 1);
+  assert(buf.FullText() ==
          "a\xc3\x97"
          "2");
 
-  buf.append_or_increment("a");
-  assert(buf.segment_count() == 1);
-  assert(buf.full_text() ==
+  buf.AppendOrIncrement("a");
+  assert(buf.SegmentCount() == 1);
+  assert(buf.FullText() ==
          "a\xc3\x97"
          "3");
 
   // Adding different key
-  buf.append_or_increment("b");
-  assert(buf.full_text() ==
+  buf.AppendOrIncrement("b");
+  assert(buf.FullText() ==
          "a\xc3\x97"
          "3b");
 
   // Special key adds leading space if needed
-  buf.append_or_increment("Enter");
-  assert(buf.full_text() ==
+  buf.AppendOrIncrement("Enter");
+  assert(buf.FullText() ==
          "a\xc3\x97"
          "3b Enter");
 
   // Backspace pops "Enter"
-  buf.backspace();
-  assert(buf.full_text() ==
+  buf.Backspace();
+  assert(buf.FullText() ==
          "a\xc3\x97"
          "3b ");
 
   // Backspace pops space token
-  buf.backspace();
-  assert(buf.full_text() ==
+  buf.Backspace();
+  assert(buf.FullText() ==
          "a\xc3\x97"
          "3b");
 
   // Delete word
-  buf.clear();
-  buf.append_raw("hello");
-  buf.append_raw(" ");
-  buf.append_raw("world");
-  assert(buf.full_text() == "hello world");
+  buf.Clear();
+  buf.AppendRaw("hello");
+  buf.AppendRaw(" ");
+  buf.AppendRaw("world");
+  assert(buf.FullText() == "hello world");
 
-  buf.delete_word();
-  assert(buf.full_text() == "hello ");
+  buf.DeleteWord();
+  assert(buf.FullText() == "hello ");
 
   std::cout << "[TEST] test_buffer_operations PASSED.\n";
 }

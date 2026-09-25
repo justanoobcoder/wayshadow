@@ -1,5 +1,3 @@
-#include "wayshadow/config.hpp"
-
 #include <cassert>
 #include <cmath>
 #include <cstdio>
@@ -8,223 +6,245 @@
 #include <iostream>
 #include <string>
 
+#include "wayshadow/color.hpp"
+#include "wayshadow/config.hpp"
+
 extern std::filesystem::path WriteTmpConf(const std::string& content) {
-    char buf[64];
-    std::snprintf(buf, sizeof(buf), "/tmp/wayshadow_test_%p.conf", static_cast<const void*>(content.c_str()));
-    std::ofstream f(buf);
-    f << content;
-    return buf;
+  char buf[64];
+  std::snprintf(buf, sizeof(buf), "/tmp/wayshadow_test_%p.conf",
+                static_cast<const void*>(content.c_str()));
+  std::ofstream f(buf);
+  f << content;
+  return buf;
 }
 
 extern void TestConfigFileFull() {
-    std::cout << "[TEST] Running test_config_file_full...\n";
+  std::cout << "[TEST] Running test_config_file_full...\n";
 
-    const std::string ini = "[settings]\n"
-                            "background = #1e1e2e\n"
-                            "foreground = #cdd6f4\n"
-                            "opacity = 0.8\n"
-                            "font_size = 70\n"
-                            "geometry = 900x140\n"
-                            "hide_timeout = 2500\n";
+  const std::string ini =
+    "[settings]\n"
+    "background = #1e1e2e\n"
+    "foreground = #cdd6f4\n"
+    "opacity = 0.8\n"
+    "font_size = 70\n"
+    "geometry = 900x140\n"
+    "hide_timeout = 2500\n";
 
-    const auto path = WriteTmpConf(ini);
-    const wayshadow::Config cfg = wayshadow::Config::load_from_file(path);
-    std::filesystem::remove(path);
+  const auto path = WriteTmpConf(ini);
+  const wayshadow::Config cfg = wayshadow::Config::LoadFromFile(path);
+  std::filesystem::remove(path);
 
-    assert(std::abs(cfg.bg_color.r - (0x1e / 255.0)) < 0.01);
-    assert(std::abs(cfg.bg_color.g - (0x1e / 255.0)) < 0.01);
-    assert(std::abs(cfg.bg_color.b - (0x2e / 255.0)) < 0.01);
-    assert(std::abs(cfg.bg_color.a - 0.8) < 0.01);
+  assert(std::abs(cfg.bg_color.r - (0x1e / 255.0)) < 0.01);
+  assert(std::abs(cfg.bg_color.g - (0x1e / 255.0)) < 0.01);
+  assert(std::abs(cfg.bg_color.b - (0x2e / 255.0)) < 0.01);
+  assert(std::abs(cfg.bg_color.a - 0.8) < 0.01);
 
-    assert(std::abs(cfg.text_color.r - (0xcd / 255.0)) < 0.01);
-    assert(std::abs(cfg.text_color.g - (0xd6 / 255.0)) < 0.01);
-    assert(std::abs(cfg.text_color.b - (0xf4 / 255.0)) < 0.01);
+  assert(std::abs(cfg.text_color.r - (0xcd / 255.0)) < 0.01);
+  assert(std::abs(cfg.text_color.g - (0xd6 / 255.0)) < 0.01);
+  assert(std::abs(cfg.text_color.b - (0xf4 / 255.0)) < 0.01);
 
-    assert(cfg.font_size == 70);
-    assert(cfg.width == 900);
-    assert(cfg.height == 140);
-    assert(cfg.hide_timeout_ms == 2500);
+  assert(cfg.font_size == 70);
+  assert(cfg.width == 900);
+  assert(cfg.height == 140);
+  assert(cfg.hide_timeout_ms == 2500);
 
-    std::cout << "[TEST] test_config_file_full PASSED.\n";
+  std::cout << "[TEST] test_config_file_full PASSED.\n";
 }
 
 extern void TestConfigFilePartial() {
-    std::cout << "[TEST] Running test_config_file_partial...\n";
+  std::cout << "[TEST] Running test_config_file_partial...\n";
 
-    const std::string ini = "[settings]\n"
-                            "font_size = 50\n"
-                            "hide_timeout = 500\n";
+  const std::string ini =
+    "[settings]\n"
+    "font_size = 50\n"
+    "hide_timeout = 500\n";
 
-    const auto path = WriteTmpConf(ini);
-    const wayshadow::Config cfg = wayshadow::Config::load_from_file(path);
-    std::filesystem::remove(path);
+  const auto path = WriteTmpConf(ini);
+  const wayshadow::Config cfg = wayshadow::Config::LoadFromFile(path);
+  std::filesystem::remove(path);
 
-    assert(cfg.font_size == 50);
-    assert(cfg.hide_timeout_ms == 500);
+  assert(cfg.font_size == 50);
+  assert(cfg.hide_timeout_ms == 500);
 
-    assert(cfg.width == 840);
-    assert(cfg.height == 130);
-    assert(std::abs(cfg.bg_color.a - wayshadow::colors::DefaultBackground.a) < 0.01);
+  assert(cfg.width == 840);
+  assert(cfg.height == 130);
+  assert(std::abs(cfg.bg_color.a - wayshadow::colors::kDefaultBackground.a) <
+         0.01);
 
-    std::cout << "[TEST] test_config_file_partial PASSED.\n";
+  std::cout << "[TEST] test_config_file_partial PASSED.\n";
 }
 
 extern void TestConfigFileBg6hexPreservesDefaultAlpha() {
-    std::cout << "[TEST] Running test_config_file_bg_6hex_preserves_default_alpha...\n";
+  std::cout
+    << "[TEST] Running test_config_file_bg_6hex_preserves_default_alpha...\n";
 
-    const std::string ini = "[settings]\n"
-                            "background = #ff0000\n";
+  const std::string ini =
+    "[settings]\n"
+    "background = #ff0000\n";
 
-    const auto path = WriteTmpConf(ini);
-    const wayshadow::Config cfg = wayshadow::Config::load_from_file(path);
-    std::filesystem::remove(path);
+  const auto path = WriteTmpConf(ini);
+  const wayshadow::Config cfg = wayshadow::Config::LoadFromFile(path);
+  std::filesystem::remove(path);
 
-    assert(std::abs(cfg.bg_color.r - 1.0) < 0.01);
-    assert(std::abs(cfg.bg_color.g - 0.0) < 0.01);
-    assert(std::abs(cfg.bg_color.b - 0.0) < 0.01);
-    assert(std::abs(cfg.bg_color.a - wayshadow::colors::DefaultBackground.a) < 0.01);
+  assert(std::abs(cfg.bg_color.r - 1.0) < 0.01);
+  assert(std::abs(cfg.bg_color.g - 0.0) < 0.01);
+  assert(std::abs(cfg.bg_color.b - 0.0) < 0.01);
+  assert(std::abs(cfg.bg_color.a - wayshadow::colors::kDefaultBackground.a) <
+         0.01);
 
-    std::cout << "[TEST] test_config_file_bg_6hex_preserves_default_alpha PASSED.\n";
+  std::cout
+    << "[TEST] test_config_file_bg_6hex_preserves_default_alpha PASSED.\n";
 }
 
 extern void TestConfigFileBg8hexUsesEmbeddedAlpha() {
-    std::cout << "[TEST] Running test_config_file_bg_8hex_uses_embedded_alpha...\n";
+  std::cout
+    << "[TEST] Running test_config_file_bg_8hex_uses_embedded_alpha...\n";
 
-    const std::string ini = "[settings]\n"
-                            "background = #0000ff80\n";
+  const std::string ini =
+    "[settings]\n"
+    "background = #0000ff80\n";
 
-    const auto path = WriteTmpConf(ini);
-    const wayshadow::Config cfg = wayshadow::Config::load_from_file(path);
-    std::filesystem::remove(path);
+  const auto path = WriteTmpConf(ini);
+  const wayshadow::Config cfg = wayshadow::Config::LoadFromFile(path);
+  std::filesystem::remove(path);
 
-    assert(std::abs(cfg.bg_color.r - 0.0) < 0.01);
-    assert(std::abs(cfg.bg_color.g - 0.0) < 0.01);
-    assert(std::abs(cfg.bg_color.b - 1.0) < 0.01);
-    assert(std::abs(cfg.bg_color.a - (0x80 / 255.0)) < 0.01);
+  assert(std::abs(cfg.bg_color.r - 0.0) < 0.01);
+  assert(std::abs(cfg.bg_color.g - 0.0) < 0.01);
+  assert(std::abs(cfg.bg_color.b - 1.0) < 0.01);
+  assert(std::abs(cfg.bg_color.a - (0x80 / 255.0)) < 0.01);
 
-    std::cout << "[TEST] test_config_file_bg_8hex_uses_embedded_alpha PASSED.\n";
+  std::cout << "[TEST] test_config_file_bg_8hex_uses_embedded_alpha PASSED.\n";
 }
 
 extern void TestConfigFileOpacityClamp() {
-    std::cout << "[TEST] Running test_config_file_opacity_clamp...\n";
+  std::cout << "[TEST] Running test_config_file_opacity_clamp...\n";
 
-    const std::string ini_high = "[settings]\n"
-                                 "opacity = 5.0\n";
-    auto path = WriteTmpConf(ini_high);
-    auto cfg = wayshadow::Config::load_from_file(path);
-    std::filesystem::remove(path);
-    assert(std::abs(cfg.bg_color.a - 1.0) < 0.001);
+  const std::string ini_high =
+    "[settings]\n"
+    "opacity = 5.0\n";
+  auto path = WriteTmpConf(ini_high);
+  auto cfg = wayshadow::Config::LoadFromFile(path);
+  std::filesystem::remove(path);
+  assert(std::abs(cfg.bg_color.a - 1.0) < 0.001);
 
-    const std::string ini_low = "[settings]\n"
-                                "opacity = -1.0\n";
-    path = WriteTmpConf(ini_low);
-    cfg = wayshadow::Config::load_from_file(path);
-    std::filesystem::remove(path);
-    assert(std::abs(cfg.bg_color.a - 0.0) < 0.001);
+  const std::string ini_low =
+    "[settings]\n"
+    "opacity = -1.0\n";
+  path = WriteTmpConf(ini_low);
+  cfg = wayshadow::Config::LoadFromFile(path);
+  std::filesystem::remove(path);
+  assert(std::abs(cfg.bg_color.a - 0.0) < 0.001);
 
-    std::cout << "[TEST] test_config_file_opacity_clamp PASSED.\n";
+  std::cout << "[TEST] test_config_file_opacity_clamp PASSED.\n";
 }
 
 extern void TestConfigFileClampMinimums() {
-    std::cout << "[TEST] Running test_config_file_clamp_minimums...\n";
+  std::cout << "[TEST] Running test_config_file_clamp_minimums...\n";
 
-    const std::string ini = "[settings]\n"
-                            "font_size = 1\n"
-                            "geometry = 1x1\n";
+  const std::string ini =
+    "[settings]\n"
+    "font_size = 1\n"
+    "geometry = 1x1\n";
 
-    const auto path = WriteTmpConf(ini);
-    const wayshadow::Config cfg = wayshadow::Config::load_from_file(path);
-    std::filesystem::remove(path);
+  const auto path = WriteTmpConf(ini);
+  const wayshadow::Config cfg = wayshadow::Config::LoadFromFile(path);
+  std::filesystem::remove(path);
 
-    assert(cfg.font_size == wayshadow::Config::MIN_FONT_SIZE);
-    assert(cfg.width == wayshadow::Config::MIN_WIDTH);
-    assert(cfg.height == wayshadow::Config::MIN_HEIGHT);
+  assert(cfg.font_size == wayshadow::Config::kMinFontSize);
+  assert(cfg.width == wayshadow::Config::kMinWidth);
+  assert(cfg.height == wayshadow::Config::kMinHeight);
 
-    std::cout << "[TEST] test_config_file_clamp_minimums PASSED.\n";
+  std::cout << "[TEST] test_config_file_clamp_minimums PASSED.\n";
 }
 
 extern void TestConfigFileNegativeHideTimeoutUsesDefault() {
-    std::cout << "[TEST] Running test_config_file_negative_hide_timeout_uses_default...\n";
+  std::cout << "[TEST] Running "
+               "test_config_file_negative_hide_timeout_uses_default...\n";
 
-    const std::string ini = "[settings]\n"
-                            "hide_timeout = -500\n";
+  const std::string ini =
+    "[settings]\n"
+    "hide_timeout = -500\n";
 
-    const auto path = WriteTmpConf(ini);
-    const wayshadow::Config cfg = wayshadow::Config::load_from_file(path);
-    std::filesystem::remove(path);
+  const auto path = WriteTmpConf(ini);
+  const wayshadow::Config cfg = wayshadow::Config::LoadFromFile(path);
+  std::filesystem::remove(path);
 
-    assert(cfg.hide_timeout_ms == wayshadow::Config::DEFAULT_HIDE_TIMEOUT_MS);
+  assert(cfg.hide_timeout_ms == wayshadow::Config::kDefaultHideTimeoutMs);
 
-    std::cout << "[TEST] test_config_file_negative_hide_timeout_uses_default PASSED.\n";
+  std::cout
+    << "[TEST] test_config_file_negative_hide_timeout_uses_default PASSED.\n";
 }
 
 extern void TestConfigFileZeroHideTimeoutAllowed() {
-    std::cout << "[TEST] Running test_config_file_zero_hide_timeout_allowed...\n";
+  std::cout << "[TEST] Running test_config_file_zero_hide_timeout_allowed...\n";
 
-    const std::string ini = "[settings]\n"
-                            "hide_timeout = 0\n";
+  const std::string ini =
+    "[settings]\n"
+    "hide_timeout = 0\n";
 
-    const auto path = WriteTmpConf(ini);
-    const wayshadow::Config cfg = wayshadow::Config::load_from_file(path);
-    std::filesystem::remove(path);
+  const auto path = WriteTmpConf(ini);
+  const wayshadow::Config cfg = wayshadow::Config::LoadFromFile(path);
+  std::filesystem::remove(path);
 
-    assert(cfg.hide_timeout_ms == 0);
+  assert(cfg.hide_timeout_ms == 0);
 
-    std::cout << "[TEST] test_config_file_zero_hide_timeout_allowed PASSED.\n";
+  std::cout << "[TEST] test_config_file_zero_hide_timeout_allowed PASSED.\n";
 }
 
 extern void TestConfigFileMissingReturnsDefaults() {
-    std::cout << "[TEST] Running test_config_file_missing_returns_defaults...\n";
+  std::cout << "[TEST] Running test_config_file_missing_returns_defaults...\n";
 
-    const wayshadow::Config defaults{};
-    const wayshadow::Config cfg = wayshadow::Config::load_from_file("/tmp/wayshadow_nonexistent_file_12345.conf");
+  const wayshadow::Config defaults{};
+  const wayshadow::Config cfg = wayshadow::Config::LoadFromFile(
+    "/tmp/wayshadow_nonexistent_file_12345.conf");
 
-    assert(cfg.font_size == defaults.font_size);
-    assert(cfg.width == defaults.width);
-    assert(cfg.height == defaults.height);
-    assert(cfg.hide_timeout_ms == defaults.hide_timeout_ms);
-    assert(std::abs(cfg.bg_color.a - defaults.bg_color.a) < 0.001);
+  assert(cfg.font_size == defaults.font_size);
+  assert(cfg.width == defaults.width);
+  assert(cfg.height == defaults.height);
+  assert(cfg.hide_timeout_ms == defaults.hide_timeout_ms);
+  assert(std::abs(cfg.bg_color.a - defaults.bg_color.a) < 0.001);
 
-    std::cout << "[TEST] test_config_file_missing_returns_defaults PASSED.\n";
+  std::cout << "[TEST] test_config_file_missing_returns_defaults PASSED.\n";
 }
 
 extern void TestConfigParsing() {
-    std::cout << "[TEST] Running test_config_parsing...\n";
+  std::cout << "[TEST] Running test_config_parsing...\n";
 
-    char arg0[] = "wayshadow";
-    char arg1[] = "-b";
-    char arg2[] = "#112233";
-    char arg3[] = "-s";
-    char arg4[] = "42";
-    char arg5[] = "-g";
-    char arg6[] = "600x120";
-    char arg7[] = "-o";
-    char arg8[] = "0.75";
-    char arg9[] = "-t";
-    char arg10[] = "3000";
+  char arg0[] = "wayshadow";
+  char arg1[] = "-b";
+  char arg2[] = "#112233";
+  char arg3[] = "-s";
+  char arg4[] = "42";
+  char arg5[] = "-g";
+  char arg6[] = "600x120";
+  char arg7[] = "-o";
+  char arg8[] = "0.75";
+  char arg9[] = "-t";
+  char arg10[] = "3000";
 
-    char* argv[] = {arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10};
-    int argc = 11;
+  char* argv[] = {arg0, arg1, arg2, arg3, arg4, arg5,
+                  arg6, arg7, arg8, arg9, arg10};
+  int argc = 11;
 
-    const auto cli = wayshadow::CliOptions::parse(argc, argv);
-    assert(cli.action == wayshadow::CliOptions::Action::Run);
-    assert(cli.config.font_size == 42);
-    assert(cli.config.width == 600);
-    assert(cli.config.height == 120);
-    assert(cli.config.hide_timeout_ms == 3000);
-    assert(std::abs(cli.config.bg_color.a - 0.75) < 0.01);
+  const auto cli = wayshadow::CliOptions::Parse(argc, argv);
+  assert(cli.action == wayshadow::CliOptions::Action::kRun);
+  assert(cli.config.font_size == 42);
+  assert(cli.config.width == 600);
+  assert(cli.config.height == 120);
+  assert(cli.config.hide_timeout_ms == 3000);
+  assert(std::abs(cli.config.bg_color.a - 0.75) < 0.01);
 
-    std::cout << "[TEST] test_config_parsing PASSED.\n";
+  std::cout << "[TEST] test_config_parsing PASSED.\n";
 }
 
 extern void TestConfigFileLoading() {
-    TestConfigFileFull();
-    TestConfigFilePartial();
-    TestConfigFileBg6hexPreservesDefaultAlpha();
-    TestConfigFileBg8hexUsesEmbeddedAlpha();
-    TestConfigFileOpacityClamp();
-    TestConfigFileClampMinimums();
-    TestConfigFileNegativeHideTimeoutUsesDefault();
-    TestConfigFileZeroHideTimeoutAllowed();
-    TestConfigFileMissingReturnsDefaults();
+  TestConfigFileFull();
+  TestConfigFilePartial();
+  TestConfigFileBg6hexPreservesDefaultAlpha();
+  TestConfigFileBg8hexUsesEmbeddedAlpha();
+  TestConfigFileOpacityClamp();
+  TestConfigFileClampMinimums();
+  TestConfigFileNegativeHideTimeoutUsesDefault();
+  TestConfigFileZeroHideTimeoutAllowed();
+  TestConfigFileMissingReturnsDefaults();
 }
