@@ -1,40 +1,43 @@
-#pragma once
-
-#include "wayshadow/color.hpp"
+#ifndef WAYSHADOW_CONFIG_HPP
+#define WAYSHADOW_CONFIG_HPP
 
 #include <filesystem>
 #include <string>
 
+#include "wayshadow/color.hpp"
+
 namespace wayshadow {
 
-    struct Config {
-        Color bg_color{colors::DefaultBackground};
-        Color text_color{colors::White};
-        Color hold_color{0.9, 0.2, 0.2, 1.0};
-        int font_size{65};
-        int width{840};
-        int height{130};
-        int hide_timeout_ms{2000};
+struct Config {
+  Color bg_color{colors::kDefaultBackground};
+  Color text_color{colors::kWhite};
+  Color hold_color{.r = 0.9, .g = 0.2, .b = 0.2, .a = 1.0};
+  int font_size{65};
+  int width{840};
+  int height{130};
+  int hide_timeout_ms{2000};
 
-        static constexpr int MIN_WIDTH = 100;
-        static constexpr int MIN_HEIGHT = 50;
-        static constexpr int MIN_FONT_SIZE = 10;
-        static constexpr int DEFAULT_HIDE_TIMEOUT_MS = 2000;
+  static constexpr int kMinWidth = 100;
+  static constexpr int kMinHeight = 50;
+  static constexpr int kMinFontSize = 10;
+  static constexpr int kDefaultHideTimeoutMs = 2000;
 
-        static Config load_from_file(const std::filesystem::path& path);
-        static Config load_default_config();
-    };
+  static Config LoadFromFile(const std::filesystem::path& path);
+  static Config LoadDefaultConfig();
+};
 
-    struct CliOptions {
-        enum class Action { Run, ShowHelp, ShowVersion, Error };
+struct CliOptions {
+  enum class Action { kRun, kShowHelp, kShowVersion, kError };
 
-        Action action{Action::Run};
-        Config config{};
-        std::string error_message{};
+  Action action{Action::kRun};
+  Config config{};
+  std::string error_message;
 
-        static CliOptions parse(int argc, char* argv[]);
-        static void print_usage(std::string_view program_name);
-        static void print_version();
-    };
+  static CliOptions Parse(int argc, char* argv[]);
+  static void PrintUsage(std::string_view program_name);
+  static void PrintVersion();
+};
 
-} // namespace wayshadow
+}  // namespace wayshadow
+
+#endif

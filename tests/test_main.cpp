@@ -1,21 +1,21 @@
 #include <iostream>
 
-void test_color_parsing();
-void test_config_parsing();
-void test_config_file_loading();
-void test_buffer_operations();
-void test_mouse_state();
+void TestColorParsing();
+void TestConfigParsing();
+void TestConfigFileLoading();
+void TestBufferOperations();
+void TestMouseState();
 
 int main() {
     std::cout << "========================================\n";
     std::cout << " Running wayshadow unit tests\n";
     std::cout << "========================================\n";
 
-    test_color_parsing();
-    test_config_parsing();
-    test_config_file_loading();
-    test_buffer_operations();
-    test_mouse_state();
+    TestColorParsing();
+    TestConfigParsing();
+    TestConfigFileLoading();
+    TestBufferOperations();
+    TestMouseState();
 
     std::cout << "========================================\n";
     std::cout << " ALL UNIT TESTS PASSED SUCCESSFULLY!\n";

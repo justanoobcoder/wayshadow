@@ -1,26 +1,27 @@
+#include <iostream>
+
 #include "wayshadow/app.hpp"
 #include "wayshadow/config.hpp"
 
-#include <iostream>
-
 int main(int argc, char* argv[]) {
-    const auto cli = wayshadow::CliOptions::parse(argc, argv);
+  const auto cli = wayshadow::CliOptions::Parse(argc, argv);
 
-    switch (cli.action) {
-    case wayshadow::CliOptions::Action::ShowHelp:
-        wayshadow::CliOptions::print_usage(argv[0]);
-        return 0;
-    case wayshadow::CliOptions::Action::ShowVersion:
-        wayshadow::CliOptions::print_version();
-        return 0;
-    case wayshadow::CliOptions::Action::Error:
-        std::cerr << "Error: " << cli.error_message << "\n\n";
-        wayshadow::CliOptions::print_usage(argv[0]);
-        return 1;
-    case wayshadow::CliOptions::Action::Run:
-        break;
-    }
+  switch (cli.action) {
+    case wayshadow::CliOptions::Action::kShowHelp:
+      wayshadow::CliOptions::PrintUsage(argv[0]);
+      return 0;
+    case wayshadow::CliOptions::Action::kShowVersion:
+      wayshadow::CliOptions::PrintVersion();
+      return 0;
+    case wayshadow::CliOptions::Action::kError:
+      std::cerr << "Error: " << cli.error_message << "\n\n";
+      wayshadow::CliOptions::PrintUsage(argv[0]);
+      return 1;
+    case wayshadow::CliOptions::Action::kRun:
+      break;
+  }
 
-    wayshadow::Application app(cli.config);
-    return app.run();
+  wayshadow::Application app(cli.config);
+
+  return app.Run();
 }

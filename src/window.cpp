@@ -1,155 +1,161 @@
 #include "wayshadow/window.hpp"
 
-#include "wayshadow/draw.hpp"
-
 #include <utility>
+
+#include "wayshadow/draw.hpp"
 
 namespace wayshadow {
 
-    WindowManager::WindowManager(WaylandContext& wl_ctx) : wl_ctx_(&wl_ctx) {}
+namespace {
 
-    WindowManager::~WindowManager() {
-        destroy_surfaces();
-        if (buffer_) {
-            wl_buffer_destroy(buffer_);
-            buffer_ = nullptr;
-        }
+void OneXdgSurfaceConfigure(void* data, struct xdg_surface* surface,
+                            uint32_t serial) {
+  auto* self = static_cast<WindowManager*>(data);
+  xdg_surface_ack_configure(surface, serial);
+  if (self && self->State() && self->State()->window_visible) {
+    self->Redraw(*self->State());
+  }
+}
+
+const struct xdg_surface_listener kSurfaceListener = {
+  .configure = OneXdgSurfaceConfigure,
+};
+
+void OnXdgToplevelConfigure(void* /*data*/, struct xdg_toplevel* /*toplevel*/,
+                            int32_t /*w*/, int32_t /*h*/,
+                            struct wl_array* /*states*/
+) {}
+
+void OnXdgToplevelClose(void* data, struct xdg_toplevel* /*toplevel*/) {
+  auto* self = static_cast<WindowManager*>(data);
+  if (self && self->State()) {
+    self->State()->running = false;
+  }
+}
+
+void OnXdgToplevelConfigureBounds(void* /*data*/,
+                                  struct xdg_toplevel* /*toplevel*/,
+                                  int32_t /*w*/, int32_t /*h*/) {}
+
+void OnXdgToplevelWmCapabilities(void* /*data*/,
+                                 struct xdg_toplevel* /*toplevel*/,
+                                 struct wl_array* /*capabilities*/
+) {}
+
+const struct xdg_toplevel_listener kToplevelListener = {
+  .configure = OnXdgToplevelConfigure,
+  .close = OnXdgToplevelClose,
+  .configure_bounds = OnXdgToplevelConfigureBounds,
+  .wm_capabilities = OnXdgToplevelWmCapabilities,
+};
+
+}  // namespace
+
+WindowManager::WindowManager(WaylandContext& wl_ctx) : wl_ctx_(&wl_ctx) {}
+
+WindowManager::~WindowManager() {
+  DestroySurfaces();
+  if (buffer_) {
+    wl_buffer_destroy(buffer_);
+    buffer_ = nullptr;
+  }
+}
+
+WindowManager::WindowManager(WindowManager&& other) noexcept
+    : wl_ctx_(std::exchange(other.wl_ctx_, nullptr)),
+      surface_(std::exchange(other.surface_, nullptr)),
+      xdg_surface_(std::exchange(other.xdg_surface_, nullptr)),
+      xdg_toplevel_(std::exchange(other.xdg_toplevel_, nullptr)),
+      buffer_(std::exchange(other.buffer_, nullptr)),
+      state_(std::exchange(other.state_, nullptr)) {}
+
+WindowManager& WindowManager::operator=(WindowManager&& other) noexcept {
+  if (this != &other) {
+    DestroySurfaces();
+    if (buffer_) {
+      wl_buffer_destroy(buffer_);
     }
 
-    WindowManager::WindowManager(WindowManager&& other) noexcept
-        : wl_ctx_(std::exchange(other.wl_ctx_, nullptr)), surface_(std::exchange(other.surface_, nullptr)),
-          xdg_surface_(std::exchange(other.xdg_surface_, nullptr)),
-          xdg_toplevel_(std::exchange(other.xdg_toplevel_, nullptr)), buffer_(std::exchange(other.buffer_, nullptr)),
-          state_(std::exchange(other.state_, nullptr)) {}
+    wl_ctx_ = std::exchange(other.wl_ctx_, nullptr);
+    surface_ = std::exchange(other.surface_, nullptr);
+    xdg_surface_ = std::exchange(other.xdg_surface_, nullptr);
+    xdg_toplevel_ = std::exchange(other.xdg_toplevel_, nullptr);
+    buffer_ = std::exchange(other.buffer_, nullptr);
+    state_ = std::exchange(other.state_, nullptr);
+  }
+  return *this;
+}
 
-    WindowManager& WindowManager::operator=(WindowManager&& other) noexcept {
-        if (this != &other) {
-            destroy_surfaces();
-            if (buffer_) {
-                wl_buffer_destroy(buffer_);
-            }
+void WindowManager::DestroySurfaces() {
+  if (xdg_toplevel_) {
+    xdg_toplevel_destroy(xdg_toplevel_);
+    xdg_toplevel_ = nullptr;
+  }
+  if (xdg_surface_) {
+    xdg_surface_destroy(xdg_surface_);
+    xdg_surface_ = nullptr;
+  }
+  if (surface_) {
+    wl_surface_destroy(surface_);
+    surface_ = nullptr;
+  }
+}
 
-            wl_ctx_ = std::exchange(other.wl_ctx_, nullptr);
-            surface_ = std::exchange(other.surface_, nullptr);
-            xdg_surface_ = std::exchange(other.xdg_surface_, nullptr);
-            xdg_toplevel_ = std::exchange(other.xdg_toplevel_, nullptr);
-            buffer_ = std::exchange(other.buffer_, nullptr);
-            state_ = std::exchange(other.state_, nullptr);
-        }
-        return *this;
-    }
+void WindowManager::CreateWindow(ClientState& state) {
+  state_ = &state;
+  if (!wl_ctx_->Compositor() || !wl_ctx_->XdgWmBase()) return;
 
-    void WindowManager::destroy_surfaces() {
-        if (xdg_toplevel_) {
-            xdg_toplevel_destroy(xdg_toplevel_);
-            xdg_toplevel_ = nullptr;
-        }
-        if (xdg_surface_) {
-            xdg_surface_destroy(xdg_surface_);
-            xdg_surface_ = nullptr;
-        }
-        if (surface_) {
-            wl_surface_destroy(surface_);
-            surface_ = nullptr;
-        }
-    }
+  surface_ = wl_compositor_create_surface(wl_ctx_->Compositor());
+  xdg_surface_ = xdg_wm_base_get_xdg_surface(wl_ctx_->XdgWmBase(), surface_);
+  xdg_surface_add_listener(xdg_surface_, &kSurfaceListener, this);
 
-    static void on_xdg_surface_configure(void* data, struct xdg_surface* surface, uint32_t serial) {
-        auto* self = static_cast<WindowManager*>(data);
-        xdg_surface_ack_configure(surface, serial);
-        if (self && self->state() && self->state()->window_visible) {
-            self->redraw(*self->state());
-        }
-    }
+  xdg_toplevel_ = xdg_surface_get_toplevel(xdg_surface_);
+  xdg_toplevel_add_listener(xdg_toplevel_, &kToplevelListener, this);
+  xdg_toplevel_set_app_id(xdg_toplevel_, "wayshadow");
+  xdg_toplevel_set_title(xdg_toplevel_, "WayShadow");
 
-    static const struct xdg_surface_listener surface_listener = {
-        .configure = on_xdg_surface_configure,
-    };
+  wl_surface_commit(surface_);
+}
 
-    static void on_xdg_toplevel_configure(
-        void* /*data*/, struct xdg_toplevel* /*toplevel*/, int32_t /*w*/, int32_t /*h*/, struct wl_array* /*states*/
-    ) {}
+void WindowManager::HideWindow(ClientState& state) {
+  if (!state.window_visible) return;
+  state.window_visible = false;
+  state.buffer.Clear();
+  state.mouse.last_button.clear();
+  state.mouse.lmb = false;
+  state.mouse.rmb = false;
+  state.mouse.mmb = false;
+  state.mouse.back = false;
+  state.mouse.forward = false;
+  state.mouse.last_lmb = false;
+  state.mouse.last_rmb = false;
+  state.mouse.last_mmb = false;
+  state.mouse.last_back = false;
+  state.mouse.last_forward = false;
+  state.mouse.has_click = false;
+  state.mouse.click_count = 0;
+  state.mouse.last_button_id = 0;
 
-    static void on_xdg_toplevel_close(void* data, struct xdg_toplevel* /*toplevel*/) {
-        auto* self = static_cast<WindowManager*>(data);
-        if (self && self->state()) {
-            self->state()->running = false;
-        }
-    }
+  if (surface_) {
+    wl_surface_attach(surface_, nullptr, 0, 0);
+    wl_surface_commit(surface_);
+  }
+}
 
-    static void
-    on_xdg_toplevel_configure_bounds(void* /*data*/, struct xdg_toplevel* /*toplevel*/, int32_t /*w*/, int32_t /*h*/) {}
+void WindowManager::ShowWindow(ClientState& state) {
+  if (state.window_visible) return;
 
-    static void on_xdg_toplevel_wm_capabilities(
-        void* /*data*/, struct xdg_toplevel* /*toplevel*/, struct wl_array* /*capabilities*/
-    ) {}
+  DestroySurfaces();
+  CreateWindow(state);
+  wl_display_roundtrip(wl_ctx_->Display());
 
-    static const struct xdg_toplevel_listener toplevel_listener = {
-        .configure = on_xdg_toplevel_configure,
-        .close = on_xdg_toplevel_close,
-        .configure_bounds = on_xdg_toplevel_configure_bounds,
-        .wm_capabilities = on_xdg_toplevel_wm_capabilities,
-    };
+  state.window_visible = true;
+  Redraw(state);
+}
 
-    void WindowManager::create_window(ClientState& state) {
-        state_ = &state;
-        if (!wl_ctx_->compositor() || !wl_ctx_->xdg_wm_base())
-            return;
+void WindowManager::Redraw(ClientState& state) {
+  if (!surface_ || !wl_ctx_->Shm()) return;
+  Renderer::Redraw(state, surface_, wl_ctx_->Shm(), &buffer_);
+}
 
-        surface_ = wl_compositor_create_surface(wl_ctx_->compositor());
-        xdg_surface_ = xdg_wm_base_get_xdg_surface(wl_ctx_->xdg_wm_base(), surface_);
-        xdg_surface_add_listener(xdg_surface_, &surface_listener, this);
-
-        xdg_toplevel_ = xdg_surface_get_toplevel(xdg_surface_);
-        xdg_toplevel_add_listener(xdg_toplevel_, &toplevel_listener, this);
-        xdg_toplevel_set_app_id(xdg_toplevel_, "wayshadow");
-        xdg_toplevel_set_title(xdg_toplevel_, "Show Me The Key");
-
-        wl_surface_commit(surface_);
-    }
-
-    void WindowManager::hide_window(ClientState& state) {
-        if (!state.window_visible)
-            return;
-        state.window_visible = false;
-        state.buffer.clear();
-        state.mouse.last_button.clear();
-        state.mouse.lmb = false;
-        state.mouse.rmb = false;
-        state.mouse.mmb = false;
-        state.mouse.back = false;
-        state.mouse.forward = false;
-        state.mouse.last_lmb = false;
-        state.mouse.last_rmb = false;
-        state.mouse.last_mmb = false;
-        state.mouse.last_back = false;
-        state.mouse.last_forward = false;
-        state.mouse.has_click = false;
-        state.mouse.click_count = 0;
-        state.mouse.last_button_id = 0;
-
-        if (surface_) {
-            wl_surface_attach(surface_, nullptr, 0, 0);
-            wl_surface_commit(surface_);
-        }
-    }
-
-    void WindowManager::show_window(ClientState& state) {
-        if (state.window_visible)
-            return;
-
-        destroy_surfaces();
-        create_window(state);
-        wl_display_roundtrip(wl_ctx_->display());
-
-        state.window_visible = true;
-        redraw(state);
-    }
-
-    void WindowManager::redraw(ClientState& state) {
-        if (!surface_ || !wl_ctx_->shm())
-            return;
-        Renderer::redraw(state, surface_, wl_ctx_->shm(), &buffer_);
-    }
-
-} // namespace wayshadow
+}  // namespace wayshadow

@@ -4,7 +4,7 @@
 #include <cmath>
 #include <iostream>
 
-void test_color_parsing() {
+extern void TestColorParsing() {
     std::cout << "[TEST] Running test_color_parsing...\n";
 
     // 6-digit hex

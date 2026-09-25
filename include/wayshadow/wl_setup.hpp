@@ -1,47 +1,56 @@
-#pragma once
+#ifndef WAYSHADOW_WL_SETUP_HPP
+#define WAYSHADOW_WL_SETUP_HPP
+
+#include <wayland-client.h>
 
 #include "wayshadow/state.hpp"
 #include "xdg-shell-client-protocol.h"
 
-#include <wayland-client.h>
-
 namespace wayshadow {
 
-    class WaylandContext {
-      public:
-        WaylandContext() = default;
-        ~WaylandContext();
+class WaylandContext {
+ public:
+  WaylandContext() = default;
+  ~WaylandContext();
 
-        WaylandContext(const WaylandContext&) = delete;
-        WaylandContext& operator=(const WaylandContext&) = delete;
-        WaylandContext(WaylandContext&&) noexcept;
-        WaylandContext& operator=(WaylandContext&&) noexcept;
+  WaylandContext(const WaylandContext&) = delete;
+  WaylandContext& operator=(const WaylandContext&) = delete;
+  WaylandContext(WaylandContext&&) noexcept;
+  WaylandContext& operator=(WaylandContext&&) noexcept;
 
-        [[nodiscard]] bool connect(ClientState& state);
-        void disconnect();
+  [[nodiscard]] bool Connect(ClientState& state);
+  void Disconnect();
 
-        [[nodiscard]] struct wl_display* display() const noexcept { return display_; }
-        [[nodiscard]] struct wl_compositor* compositor() const noexcept { return compositor_; }
-        [[nodiscard]] struct wl_shm* shm() const noexcept { return shm_; }
-        [[nodiscard]] struct xdg_wm_base* xdg_wm_base() const noexcept { return xdg_wm_base_; }
-        [[nodiscard]] struct wl_keyboard* keyboard() const noexcept { return keyboard_; }
-        [[nodiscard]] ClientState* state() const noexcept { return state_; }
+  [[nodiscard]] struct wl_display* Display() const noexcept { return display_; }
+  [[nodiscard]] struct wl_compositor* Compositor() const noexcept {
+    return compositor_;
+  }
+  [[nodiscard]] struct wl_shm* Shm() const noexcept { return shm_; }
+  [[nodiscard]] struct xdg_wm_base* XdgWmBase() const noexcept {
+    return xdg_wm_base_;
+  }
+  [[nodiscard]] struct wl_keyboard* Keyboard() const noexcept {
+    return keyboard_;
+  }
+  [[nodiscard]] ClientState* State() const noexcept { return state_; }
 
-        void set_compositor(struct wl_compositor* c) noexcept { compositor_ = c; }
-        void set_shm(struct wl_shm* s) noexcept { shm_ = s; }
-        void set_xdg_wm_base(struct xdg_wm_base* base) noexcept { xdg_wm_base_ = base; }
-        void set_seat(struct wl_seat* s) noexcept { seat_ = s; }
-        void set_keyboard(struct wl_keyboard* k) noexcept { keyboard_ = k; }
+  void SetCompositor(struct wl_compositor* c) noexcept { compositor_ = c; }
+  void SetShm(struct wl_shm* s) noexcept { shm_ = s; }
+  void SetXdgWmBase(struct xdg_wm_base* base) noexcept { xdg_wm_base_ = base; }
+  void SetSeat(struct wl_seat* s) noexcept { seat_ = s; }
+  void SetKeyboard(struct wl_keyboard* k) noexcept { keyboard_ = k; }
 
-      private:
-        struct wl_display* display_{nullptr};
-        struct wl_registry* registry_{nullptr};
-        struct wl_compositor* compositor_{nullptr};
-        struct wl_shm* shm_{nullptr};
-        struct xdg_wm_base* xdg_wm_base_{nullptr};
-        struct wl_seat* seat_{nullptr};
-        struct wl_keyboard* keyboard_{nullptr};
-        ClientState* state_{nullptr};
-    };
+ private:
+  struct wl_display* display_{nullptr};
+  struct wl_registry* registry_{nullptr};
+  struct wl_compositor* compositor_{nullptr};
+  struct wl_shm* shm_{nullptr};
+  struct xdg_wm_base* xdg_wm_base_{nullptr};
+  struct wl_seat* seat_{nullptr};
+  struct wl_keyboard* keyboard_{nullptr};
+  ClientState* state_{nullptr};
+};
 
-} // namespace wayshadow
+}  // namespace wayshadow
+
+#endif
